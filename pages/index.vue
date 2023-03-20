@@ -1,58 +1,57 @@
 <script lang="ts" setup>
+
 definePageMeta({
-    layout: 'page'
+  layout: 'page'
 })
 
 const leadingsText = computed(() => [
-    {
-        text: "NUXT 3",
-        startColor: '#007CF0',
-        endColor: '#00DFD8',
-        delay: 0
-    },
-    {
-        text: "CATOPTRIC",
-        startColor: '#7928CA',
-        endColor: '#FF0080',
-        delay: 2
-    },
-    {
-        text: "PROJECT",
-        startColor: '#FF4D4D',
-        endColor: '#F9CB28',
-        delay: 4
-    }
+  {
+    text: "NUXT 3",
+    startColor: '#007CF0',
+    endColor: '#00DFD8',
+    delay: 0
+  },
+  {
+    text: "CATOPTRIC",
+    startColor: '#7928CA',
+    endColor: '#FF0080',
+    delay: 2
+  },
+  {
+    text: "PROJECT",
+    startColor: '#FF4D4D',
+    endColor: '#F9CB28',
+    delay: 4
+  }
 ])
 </script>
 <template>
-    <PageWrapper class="flex-1 flex">
-        <PageBody class="flex-1 flex">
-            <PageSection class="flex-1 flex items-center">
-                <div class="flex-1 md:w5/8 flex flex-col z-10">
-                    <h1 class="text-center md:text-left mt-4">
-                        <span
-                            v-for="(item, i) in leadingsText"
-                            :key="i"
-                            :style="`--content: '${item.text}'; --start-color: ${
-                                item.startColor
-                            }; --end-color: ${item.endColor}; --animation-name: anim-fg-${
-                                i + 1
-                            }`"
-                            class="animated-text-bg drop-shadow-xl text-5xl xl:text-8xl 2xl:text-9xl block font-black uppercase"
-                            >
-                            <span class="animated-text-fg">{{ item.text }}</span>
-                        </span>
-                    </h1>
-                </div>
-            </PageSection>
-        </PageBody>
-    </PageWrapper>
+  <PageWrapper class="flex-1 flex">
+    <PageBody class="flex-1 flex">
+      <PageSection class="flex-1 flex items-center">
+        <div class="flex-1 md:w5/8 flex flex-col z-10">
+          <h1 class="text-center md:text-left mt-4">
+            <span v-for="(item, i) in leadingsText" :key="i" :style="`--content: '${item.text}'; --start-color: ${item.startColor
+              }; --end-color: ${item.endColor}; --animation-name: anim-fg-${i + 1
+              }`"
+              class="animated-text-bg drop-shadow-xl text-7xl xl:text-8xl 2xl:text-9xl block font-black uppercase">
+              <span class="animated-text-fg">{{ item.text }}</span>
+            </span>
+          </h1>
+        </div>
+        <div class="hidden md:flex md:w-3/8 justify-center items-end relative">
+          <MirrorFrontPage />
+        </div>
+      </PageSection>
+    </PageBody>
+  </PageWrapper>
 </template>
 
 <style lang="scss">
 @import '../assets/sass/variables';
 
 @keyframes anim-fg-1 {
+
   0%,
   16.667%,
   100% {
@@ -66,6 +65,7 @@ const leadingsText = computed(() => [
 }
 
 @keyframes anim-fg-2 {
+
   0%,
   16.667%,
   66.667%,
@@ -80,6 +80,7 @@ const leadingsText = computed(() => [
 }
 
 @keyframes anim-fg-3 {
+
   0%,
   50%,
   100% {
@@ -109,6 +110,7 @@ const leadingsText = computed(() => [
   z-index: 0;
   padding-left: $padding;
   padding-right: $padding;
+
   &:before {
     content: var(--content);
     position: absolute;
@@ -123,17 +125,16 @@ const leadingsText = computed(() => [
     padding-right: $padding;
   }
 }
+
 .animated-text-fg {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   padding-left: $padding;
   padding-right: $padding;
-  background-image: linear-gradient(
-    90deg,
-    var(--start-color),
-    var(--end-color)
-  );
+  background-image: linear-gradient(90deg,
+      var(--start-color),
+      var(--end-color));
   position: relative;
   opacity: 0;
   z-index: 1;
@@ -143,6 +144,7 @@ const leadingsText = computed(() => [
 html.dark {
   .animated-text-bg {
     color: theme('colors.gray.100');
+
     &:before {
       color: theme('colors.gray.100');
     }

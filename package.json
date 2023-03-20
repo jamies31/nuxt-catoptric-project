@@ -53,5 +53,8 @@
     "**/*.{js,ts,vue,html}": [
       "pnpm lintfix"
     ]
+  },
+  "dependencies": {
+    "suncalc": "^1.9.0"
   }
 }

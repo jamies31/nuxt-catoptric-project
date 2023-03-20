@@ -320,6 +320,7 @@ const confirmSelections = () => {
           </template>
         </BuilderPanelmodal>
         <!-- display for all current selections -->
+        <!-- create a  -->
         <span class="text-xl">Current Mirrors Selection</span>
         <div class="flex flex-col">
           <span class="text-lg">Top Left: {{ removeArrayBrackets(topLeft.selections) }}</span>
