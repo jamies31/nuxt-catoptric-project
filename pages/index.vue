@@ -47,7 +47,7 @@ const leadingsText = computed(() => [
   </PageWrapper>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../assets/sass/variables';
 
 @keyframes anim-fg-1 {
