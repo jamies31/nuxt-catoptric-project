@@ -7,13 +7,19 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    'IconFaSolid:ellipsisV': typeof import('~icons/fa-solid/ellipsis-v')['default']
+    'IconUil:angleDown': typeof import('~icons/uil/angle-down')['default']
     'IconUil:apps': typeof import('~icons/uil/apps')['default']
+    'IconUil:bars': typeof import('~icons/uil/bars')['default']
     'IconUil:checkCircle': typeof import('~icons/uil/check-circle')['default']
     'IconUil:clock': typeof import('~icons/uil/clock')['default']
+    'IconUil:exit': typeof import('~icons/uil/exit')['default']
     'IconUil:laptop': typeof import('~icons/uil/laptop')['default']
     'IconUil:moon': typeof import('~icons/uil/moon')['default']
     'IconUil:server': typeof import('~icons/uil/server')['default']
+    'IconUil:signOutAlt': typeof import('~icons/uil/sign-out-alt')['default']
     'IconUil:sun': typeof import('~icons/uil/sun')['default']
+    'IconUil:times': typeof import('~icons/uil/times')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

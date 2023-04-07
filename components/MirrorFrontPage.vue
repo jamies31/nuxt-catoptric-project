@@ -25,7 +25,7 @@ export default {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(width, height)
-    renderer.setClearColor(0x111827)
+    renderer.setClearColor(0x111827, 1)
 
     this.$refs.container.appendChild(renderer.domElement)
 
@@ -38,17 +38,22 @@ export default {
 		mirrorShape.bezierCurveTo( x + 5, y + 15, x + 10, y + 10, x + 10, y );
 
     const extrudeSettings = {
-      depth: 1,
+      steps: 2,
+      depth: 0,
       bevelEnabled: true,
-      bevelSegments: 2,
-      steps: 5,
-      bevelSize: 1,
       bevelThickness: 1,
+      bevelSize: 1,
+      bevelOffset: 0,
+      bevelSegments: 1
     }
 
     const geometry = new THREE.ExtrudeGeometry(mirrorShape, extrudeSettings)
 
-    const material = new THREE.MeshBasicMaterial({ color: 0xa8b0b2 })
+    const material = new THREE.MeshPhongMaterial({
+      color: 0xffffff,
+      shininess: 100,
+      flatShading: true,
+    })
     const mesh = new THREE.Mesh(geometry, material)
     scene.add(mesh)
 
@@ -74,8 +79,8 @@ export default {
 <style>
   canvas {
     display: block;
-		width: 100% !important;
-		height: 100%;
+		width: 42vw !important;
+		height: 55vh !important;
   }
 	#webgl {
 		width: 100%;

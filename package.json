@@ -35,6 +35,7 @@
     "postcss": "8.4.14",
     "postcss-loader": "^7.0.0",
     "prettier": "^2.7.1",
+    "prisma": "^4.12.0",
     "sass": "1.53.0",
     "sass-loader": "^13.2.0",
     "serve": "^13.0.2",
@@ -55,6 +56,16 @@
     ]
   },
   "dependencies": {
-    "suncalc": "^1.9.0"
+    "@prisma/client": "^4.12.0",
+    "@supabase/supabase-js": "^2.14.0",
+    "@types/lodash": "^4.14.192",
+    "firebase": "^9.19.1",
+    "firebase-admin": "^11.5.0",
+    "h3": "^1.6.4",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.26.1",
+    "suncalc": "^1.9.0",
+    "vee-validate": "^4.8.4",
+    "yup": "^1.0.2"
   }
 }

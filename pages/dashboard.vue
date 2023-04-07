@@ -9,7 +9,11 @@ interface IMirror {
 const router = useRouter()
 
 definePageMeta({
-  layout: 'dashboard'
+  layout: 'dashboard',
+})
+
+onBeforeMount(async () => {
+  await useAuth()
 })
 
 const topLeft = reactive({
