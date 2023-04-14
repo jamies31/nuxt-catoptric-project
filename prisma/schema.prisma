@@ -11,9 +11,10 @@ datasource db {
   directUrl = env("NUXT_DIRECT_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
+model Users {
+  id        String   @id
   email     String   @unique
   createdAt DateTime @default(now())
-  name      String?
+  firstName String?
+  lastName  String?
 }

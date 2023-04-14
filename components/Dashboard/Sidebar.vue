@@ -37,7 +37,7 @@ const sidebarItems = computed((): ISidebarItem[] => [
 		<div class="flex-1 overflow-y-auto pl-4 lg:pl-0 pr-4 py-4 border-r-1 border-gray-900/10 dark:border-gray-50/[0.2]">
 			<ul class="px-3">
 				<li v-for="item in sidebarItems" :key="item.text">
-					<Anchor :to="item.to" :text="item.text" class="group flex items-center mb-4 hover:no-underline">
+					<Anchor :to="item.to.name" :text="item.text" class="group flex items-center mb-4 hover:no-underline">
 						<div 
 							class="flex items-center mr-4 px-2 py-2 rounded-md ring-1 ring-slate-900/5 shadow-sm group-hover:shadow group-hover:ring-slate-900/10 dark:ring-0 dark:shadow-none dark:group-hover:shadow-none dark:group-hover:highlight-white/10 group-hover:shadow-sky-200 dark:highlight-white/10"
 							:class="{

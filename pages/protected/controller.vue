@@ -3,6 +3,7 @@ import { useMirrorManager } from '~/stores/mirrorManager';
 
 definePageMeta({
 	layout: 'dashboard',
+	middleware: ['auth'],
 })
 const mirrorManager = useMirrorManager();
 const allMirrors = mirrorManager.getAllMirrors;

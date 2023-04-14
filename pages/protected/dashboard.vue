@@ -10,10 +10,7 @@ const router = useRouter()
 
 definePageMeta({
   layout: 'dashboard',
-})
-
-onBeforeMount(async () => {
-  await useAuth()
+  middleware: 'auth',
 })
 
 const topLeft = reactive({

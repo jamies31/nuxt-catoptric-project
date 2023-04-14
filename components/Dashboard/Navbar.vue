@@ -38,7 +38,7 @@
                           active ? 'bg-rose-500 text-white' : 'text-gray-900',
                           'group flex w-full items-center rounded-md px-2 py-2 text-sm',
                         ]"
-                        @click="signOut"
+                        @click.prevent="logOut()"
                       >
                         <IconUil:exit
                           :active="active"
@@ -70,6 +70,14 @@
             <ThemeSwitcher type="select-box" />
           </div>
         </ActionSheetBody>
+        <MyButton 
+          type="secondary"
+          title="Logout"
+          @click.prevent="logOut()"
+        >
+          <IconUil:exit class="mr-2 h-5 w-5 text-rose-400" aria-hidden="true" />
+          <span class="ml-1">Logout</span>
+        </MyButton>
         <MyButton
           text="Close"
           type="secondary"
@@ -84,30 +92,16 @@
 </template>
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-import { useUser } from "~~/stores/user";
 
-interface SignOutResponse {
-  statusCode: number;
-  body: string;
-}
+const client = useSupabaseAuthClient();
 
-const signOut = async () => {
-  const router = useRouter();
-  const { data } = await useFetch("/api/user/signout-user", {
-    method: "GET",
-  });
-  const dataValue = data.value as SignOutResponse;
-  if (!dataValue) {
-    console.log("Error signing out");
-    return
+const logOut = async () => {
+  const { error } = await client.auth.signOut();
+  if (error) {
+    console.log(error);
   }
-  if (dataValue.statusCode !== 200) {
-    console.log("something went wrong")
-    console.log(dataValue.body)
-    return
+  else {
+    navigateTo("/")
   }
-  const user = useUser();
-  user.setLocalAuth(null, null)
-  return router.push("/")
 };
 </script>

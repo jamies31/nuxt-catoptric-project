@@ -43,6 +43,7 @@ const updateDrawerOptions = () => {
 const toggleDrawer = () => {
   showDrawer.value = !showDrawer.value;
 };
+
 const toggleOptions = (show?: boolean) => {
   if (show) {
     showOptions.value = show;

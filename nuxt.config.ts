@@ -40,6 +40,7 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "@vueuse/nuxt",
     "nuxt-windicss",
+    '@nuxtjs/supabase',
   ],
 
   // experimental features
@@ -102,10 +103,6 @@ export default defineNuxtConfig({
 
   // content
   content: {
-    documentDriven: true,
-    markdown: {
-      mdc: true,
-    },
     highlight: {
       theme: "github-dark",
     },

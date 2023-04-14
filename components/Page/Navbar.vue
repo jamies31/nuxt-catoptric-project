@@ -14,7 +14,8 @@ const menus = computed((): IMenuItem[] => [
   {
     type: 'button',
     text: 'Dashboard',
-    route: { name: 'dashboard' }
+    route: { name: 'protected/dashboard' },
+    href: '/protected/dashboard'
   }
 ])
 </script>
@@ -30,7 +31,7 @@ const menus = computed((): IMenuItem[] => [
                 class="hover:no-underline hover:text-slate-900 hover:dark:text-white capitalize">{{ item.text }}
               </Anchor>
               <MyButton v-else-if="item.type === 'button'" :text="item.text" size="xs" class="font-extrabold capitalize"
-                :to="item.route ? item.route : undefined" :href="item.href ? item.href : undefined">
+                :to="item.route?.name ? item.route.name : undefined" :href="item.href ? item.href : undefined">
               </MyButton>
             </li>
           </ul>
@@ -49,7 +50,7 @@ const menus = computed((): IMenuItem[] => [
             <ul class="flex flex-col">
               <li v-for="(item, i) in menus" :key="i" class="flex w-full"
                 :class="{ 'pb-2 mb-2 border-b border-gray-900/10 dark:border-gray-50/[0.2]': item.type === 'link' }">
-                <Anchor v-if="item.type === 'link'" :to="item.route ? item.route : undefined"
+                <Anchor v-if="item.type === 'link'" :to="item.route?.name ? item.route.name : undefined"
                   :href="item.href ? item.href : undefined" class="flex-1 hover:no-underline capitalize">{{ item.text }}
                 </Anchor>
                 <MyButton
@@ -57,7 +58,7 @@ const menus = computed((): IMenuItem[] => [
                   :text="item.text"
                   size="xs"
                   class="flex-1 font-extrabold capitalize"
-                  :to="item.route ? item.route : undefined"
+                  :to="item.route?.name ? item.route.name : undefined"
                   :href="item.href ? item.href : undefined"
                 />
               </li>

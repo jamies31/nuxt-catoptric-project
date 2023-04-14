@@ -1,15 +1,14 @@
 <script lang="ts" setup>
 import { useForm } from "vee-validate";
 import * as Yup from "yup";
-import { RegisterFormValues, UserResponse } from "~~/types/allTypes";
-
-onBeforeMount(async () => {
-  await useAuth();
-});
+import _has from "lodash/has";
+import { LogInFormValues } from "~~/types/allTypes";
 
 definePageMeta({
   layout: "login-and-register",
 });
+
+const client = useSupabaseAuthClient();
 
 const emailSchema = Yup.string()
   .email()
@@ -29,50 +28,66 @@ const passwordSchema = Yup.string()
   )
   .required();
 
-const confirmPassword = Yup.string()
-  .label("Confirm password")
-  .oneOf([Yup.ref("password")], "Passwords must match")
-  .required();
-
-const { handleSubmit, isSubmitting, errors, setErrors } = useForm<RegisterFormValues>({
-  validationSchema: Yup.object({
-    email: emailSchema,
-    password: passwordSchema,
-    confirmPassword,
-  }),
-});
+const { handleSubmit, isSubmitting, errors, setErrors } =
+  useForm<LogInFormValues>({
+    validationSchema: Yup.object({
+      email: emailSchema,
+      password: passwordSchema,
+    }),
+  });
 
 const onSubmit = handleSubmit(async (values, action) => {
   try {
     const router = useRouter();
     const { email, password } = values;
-    const { data, pending, error, refresh } = await useFetch("/api/user/create-user", {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        password
-      })
+    action.resetForm();
+    const { error } = await client.auth.signInWithPassword({
+      email: email,
+      password: password,
     })
-    action.resetForm()
-    if (!data.value) {
-      throw new Error('No data')
-    }
-    const typedData = data.value as UserResponse
-    if (typedData.statusCode !== 200) {
-      console.log(typedData.error)
-      setErrors({
-        email: typedData.error,
-      })
-      return
-    }
-    else {
-      router.push('/dashboard')
+    if (error) {
+      console.error(error);
+    } else {
+      router.push("/protected/dashboard");
     }
   } catch (err) {
-    console.log(err);
-    action.resetForm()
+    console.error(err);
+    action.resetForm();
   }
 });
+
+const signInWithGoogle = async () => {
+  try {
+    const { error } = await client.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "http://localhost:3000/protected/dashboard",
+      }
+    })
+    if (error) {
+      console.error(error);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const signInWithGitHub = async () => {
+  try {
+    const { error } = await client.auth.signInWithOAuth({
+      provider: "github",
+      options: {
+        redirectTo: "http://localhost:3000/protected/dashboard",
+      }
+    })
+    if (error) {
+      console.error(error);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 </script>
 <template>
   <PageWrapper class="flex-1 flex">
@@ -94,19 +109,21 @@ const onSubmit = handleSubmit(async (values, action) => {
               <h1
                 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white"
               >
-                Create an account
+                Welcome back
               </h1>
               <div class="flex justify-between items-center mb-6">
                 <button
                   class="hover:bg-gray-600 text-white font-bold p-2 rounded border w-40 text-sm"
+                  @click.prevent="signInWithGoogle()"
                 >
                   Sign in with Google
                 </button>
                 <div class="flex-1"></div>
                 <button
                   class="hover:bg-gray-600 text-white font-bold p-2 rounded w-40 text-sm border"
+                  @click.prevent="signInWithGitHub()"
                 >
-                  Sign in with Apple
+                  Sign in with GitHub
                 </button>
               </div>
               <div class="flex flex-row justify-center mb-6 items-center">
@@ -128,51 +145,27 @@ const onSubmit = handleSubmit(async (values, action) => {
                   type="password"
                   initialValue="Khanhquan226!"
                 />
-                <InputTextWithValidation
-                  label="Confirm password"
-                  name="confirmPassword"
-                  :validation="confirmPassword"
-                  type="confirmPassword"
-                  initialValue="Khanhquan226!"
-                />
-                <div class="flex items-start">
-                  <div class="flex items-center h-5">
-                    <input
-                      id="terms"
-                      aria-describedby="terms"
-                      type="checkbox"
-                      class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
-                      required
-                      checked
-                    />
-                  </div>
-                  <div class="ml-3 text-sm">
-                    <label
-                      for="terms"
-                      class="font-light text-gray-500 dark:text-gray-300"
-                      >I accept the
-                      <a
-                        class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                        href="#"
-                        >Terms and Conditions</a
-                      ></label
-                    >
-                  </div>
-                </div>
-                <Button
-                  label="Create an account"
-                  type="submit"
-                  class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 !border-none"
-                />
-                <p class="text-sm font-light text-gray-500 dark:text-gray-400">
-                  Already have an account?
+                <div class="flex items-center justify-start">
                   <a
                     href="/login"
-                    class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                    >Login here</a
+                    class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
+                    >Forgot password?</a
                   >
-                </p>
+                </div>
+                <Button
+                  type="submit"
+                  label="Sign in"
+                  class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 !border-none"
+                />
               </form>
+              <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+                Do not have an account yet?
+                <a
+                  href="/auth/register"
+                  class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                  >Sign up</a
+                >
+              </p>
             </div>
           </div>
         </div>
@@ -180,3 +173,37 @@ const onSubmit = handleSubmit(async (values, action) => {
     </PageBody>
   </PageWrapper>
 </template>
+
+<style lang="scss">
+div.border-t {
+  height: 1px;
+}
+
+div.border-t:before {
+  content: "";
+  display: block;
+  height: 1px;
+  background-color: #4f46e5;
+  background-image: linear-gradient(
+    to right,
+    #4f46e5,
+    #00dbde,
+    #fc00ff,
+    #00dbde,
+    #4f46e5
+  );
+  background-size: 200% 1px;
+  background-position: 0 0;
+  animation: gradient 3s linear infinite;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+</style>
