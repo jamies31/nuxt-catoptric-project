@@ -5,10 +5,12 @@ import _has from "lodash/has";
 import { LogInFormValues } from "~~/types/allTypes";
 
 definePageMeta({
-  layout: "login-and-register",
+  layout: "auth",
 });
 
 const client = useSupabaseAuthClient();
+const isOpenRef = ref(false);
+const errorMessage = ref("");
 
 const emailSchema = Yup.string()
   .email()
@@ -38,20 +40,30 @@ const { handleSubmit, isSubmitting, errors, setErrors } =
 
 const onSubmit = handleSubmit(async (values, action) => {
   try {
+    isSubmitting.value = true;
     const router = useRouter();
     const { email, password } = values;
-    action.resetForm();
     const { error } = await client.auth.signInWithPassword({
       email: email,
       password: password,
-    })
+    });
+    action.resetForm();
     if (error) {
-      console.error(error);
+      isOpenRef.value = true;
+      errorMessage.value = error.message;
+      isSubmitting.value = false;
+      return;
     } else {
-      router.push("/protected/dashboard");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const resolvedRoute = router.resolve("/protected/dashboard");
+      if (resolvedRoute.href) {
+        isSubmitting.value = false;
+        router.push(resolvedRoute.href);
+      }
     }
   } catch (err) {
     console.error(err);
+    isSubmitting.value = false;
     action.resetForm();
   }
 });
@@ -60,10 +72,7 @@ const signInWithGoogle = async () => {
   try {
     const { error } = await client.auth.signInWithOAuth({
       provider: "google",
-      options: {
-        redirectTo: "http://localhost:3000/protected/dashboard",
-      }
-    })
+    });
     if (error) {
       console.error(error);
     }
@@ -76,16 +85,19 @@ const signInWithGitHub = async () => {
   try {
     const { error } = await client.auth.signInWithOAuth({
       provider: "github",
-      options: {
-        redirectTo: "http://localhost:3000/protected/dashboard",
-      }
-    })
+    });
     if (error) {
       console.error(error);
     }
   } catch (err) {
     console.error(err);
   }
+};
+
+const onCloseHandler = {
+  close: (value: boolean) => {
+    isOpenRef.value = value;
+  },
 };
 
 </script>
@@ -98,9 +110,9 @@ const signInWithGitHub = async () => {
         >
           <a
             href="/"
-            class="flex items-center mb-6 text-4xl font-extrabold text-gray-900 dark:text-white uppercase"
+            class="flex items-center mb-6 text-4xl font-extrabold text-gray-900 dark:text-white uppercase title-text"
           >
-            Catatropic project
+            Catoptric project
           </a>
           <div
             class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
@@ -113,17 +125,19 @@ const signInWithGitHub = async () => {
               </h1>
               <div class="flex justify-between items-center mb-6">
                 <button
-                  class="hover:bg-gray-600 text-white font-bold p-2 rounded border w-40 text-sm"
+                  class="hover:bg-rose-600 text-white font-bold p-2 rounded w-5/12 text-sm border flex items-center"
                   @click.prevent="signInWithGoogle()"
                 >
-                  Sign in with Google
+                  <IconCarbon:logo-google class="w-5 h-5 flex-shrink-0" />
+                  <span class="flex-1">Sign in with Google</span>
                 </button>
                 <div class="flex-1"></div>
                 <button
-                  class="hover:bg-gray-600 text-white font-bold p-2 rounded w-40 text-sm border"
+                  class="hover:bg-dark-900 text-white font-bold p-2 rounded w-5/12 text-sm border flex items-center"
                   @click.prevent="signInWithGitHub()"
                 >
-                  Sign in with GitHub
+                  <IconCarbon:logo-github class="w-5 h-5 flex-shrink-0" />
+                  <span class="flex-1">Sign in with GitHub</span>
                 </button>
               </div>
               <div class="flex flex-row justify-center mb-6 items-center">
@@ -143,11 +157,11 @@ const signInWithGitHub = async () => {
                   name="password"
                   :validation="passwordSchema"
                   type="password"
-                  initialValue="Khanhquan226!"
+                  initialValue="Khanhquan226@"
                 />
                 <div class="flex items-center justify-start">
                   <a
-                    href="/login"
+                    href="/auth/forgot-password"
                     class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500"
                     >Forgot password?</a
                   >
@@ -155,7 +169,7 @@ const signInWithGitHub = async () => {
                 <Button
                   type="submit"
                   label="Sign in"
-                  class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 !border-none"
+                  class="w-full !text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 !border-none"
                 />
               </form>
               <p class="text-sm font-light text-gray-500 dark:text-gray-400">
@@ -163,9 +177,39 @@ const signInWithGitHub = async () => {
                 <a
                   href="/auth/register"
                   class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                  >Sign up</a
                 >
+                  Sign up
+                </a>
               </p>
+            </div>
+          </div>
+        </div>
+        <AuthModal
+          :isOpen="isOpenRef"
+          :errorMessage="errorMessage"
+          v-on="onCloseHandler"
+        />
+        <!-- Spinner -->
+        <div class="relative z-10">
+          <div
+            class="fixed inset-0 bg-black bg-opacity-60"
+            v-if="isSubmitting"
+          ></div>
+          <div class="fixed inset-0 overflow-y-auto" v-if="isSubmitting">
+            <div
+              class="flex min-h-full items-center justify-center p-4 text-center"
+            >
+              <div
+                class="w-full max-w-md transform overflow-hidden rounded-2xl bg:white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <div class="flex justify-center">
+                  <div
+                    class="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 animate-spin"
+                  >
+                    <div class="h-9 w-9 rounded-full bg-gray-200"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -175,14 +219,31 @@ const signInWithGitHub = async () => {
 </template>
 
 <style lang="scss">
-div.border-t {
-  height: 1px;
+.title-text {
+  background-image: linear-gradient(
+    to right,
+    #4f46e5,
+    #00dbde,
+    #fc00ff,
+    #00dbde,
+    #4f46e5
+  );
+  background-size: 200% 1px;
+  background-position: 0 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 7s linear infinite;
+  background-clip: text;
 }
 
-div.border-t:before {
+div.border-t {
+  height: 5px;
+}
+
+div.border-t::before {
   content: "";
   display: block;
-  height: 1px;
+  height: 5px;
   background-color: #4f46e5;
   background-image: linear-gradient(
     to right,

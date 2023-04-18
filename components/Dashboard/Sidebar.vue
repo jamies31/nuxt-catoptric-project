@@ -23,6 +23,10 @@ const sidebarItems = computed((): ISidebarItem[] => [
 	{
 		to: { name: 'controller' },
 		text: 'Controller'
+	},
+	{
+		to: { name: 'prototype'},
+		text: 'Prototype'
 	}
 ])
 </script>
@@ -49,6 +53,7 @@ const sidebarItems = computed((): ISidebarItem[] => [
 						>
 							<IconUil:apps class="text-base" v-if="item.to.name === 'dashboard'"/>
 							<IconUil:server class="text-base" v-if="item.to.name === 'controller'"/>
+							<IconIcon-park-solid:experiment class="text-base" v-if="item.to.name === 'prototype'"/>
 						</div>
 						<span 
 							class="text-base font-semibold capitalize"

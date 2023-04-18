@@ -31,7 +31,7 @@ const bottomRightMirrors = computed(() => {
 	<PageWrapper>
 		<PageBody class="flex">
 			<PageSection class="flex-1 flex items-center flex-col justify-between">
-				<div class="system-wrapper">
+				<div class="system-wrapper" v-if="allMirrors.length > 0">
 					<!-- top left -->
 					<div class="wrapper panel-1">
 						<div class="top-left">

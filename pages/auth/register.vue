@@ -4,10 +4,22 @@ import * as Yup from "yup";
 import { RegisterFormValues, UserResponse } from "~~/types/allTypes";
 
 definePageMeta({
-  layout: "login-and-register",
+  layout: "auth",
 });
 
 const client = useSupabaseAuthClient();
+const isOpenRef = ref(false);
+const errorMessage = ref("");
+
+const firstNameSchema = Yup.string()
+  .label("First name")
+  .required()
+  .min(2, "Must have at least 2 characters");
+
+const lastNameSchema = Yup.string()
+  .label("Last name")
+  .required()
+  .min(2, "Must have at least 2 characters");
 
 const emailSchema = Yup.string()
   .email()
@@ -32,43 +44,51 @@ const confirmPassword = Yup.string()
   .oneOf([Yup.ref("password")], "Passwords must match")
   .required();
 
-const { handleSubmit, isSubmitting, errors, setErrors } = useForm<RegisterFormValues>({
-  validationSchema: Yup.object({
-    email: emailSchema,
-    password: passwordSchema,
-    confirmPassword,
-  }),
-});
+const { handleSubmit, isSubmitting, errors, setErrors } =
+  useForm<RegisterFormValues>({
+    validationSchema: Yup.object({
+      firstName: firstNameSchema,
+      lastName: lastNameSchema,
+      email: emailSchema,
+      password: passwordSchema,
+      confirmPassword,
+    }),
+  });
 
 const onSubmit = handleSubmit(async (values, action) => {
   try {
+    isSubmitting.value = true;
     const router = useRouter();
-    const { email, password } = values;
-    const { data, pending, error, refresh } = await useFetch("/api/user/create-user", {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        password
-      })
-    })
-    action.resetForm()
-    if (!data.value) {
-      throw new Error('No data')
+    const { firstName, lastName, email, password } = values;
+    const { data, error } = await client.auth.signUp({
+      email: email,
+      password: password,
+      options: {
+        data: {
+          firstName: firstName,
+          lastName: lastName,
+        },
+      },
+    });
+    if (error) {
+      isOpenRef.value = true;
+      errorMessage.value = error.message;
+      isSubmitting.value = false;
+      return;
     }
-    const typedData = data.value as UserResponse
-    if (typedData.statusCode !== 200) {
-      console.log(typedData.error)
-      setErrors({
-        email: typedData.error,
-      })
-      return
-    }
-    else {
-      router.push('/dashboard')
+    if (data) {
+      isSubmitting.value = false;
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const resolvedRoute = router.resolve("/protected/dashboard");
+      if (resolvedRoute.href) {
+        isSubmitting.value = false;
+        router.push(resolvedRoute.href);
+      }
     }
   } catch (err) {
     console.log(err);
-    action.resetForm()
+    action.resetForm();
+    isSubmitting.value = false;
   }
 });
 
@@ -76,10 +96,7 @@ const signInWithGoogle = async () => {
   try {
     const { error } = await client.auth.signInWithOAuth({
       provider: "google",
-      options: {
-        redirectTo: "http://localhost:3000/protected/dashboard",
-      }
-    })
+    });
     if (error) {
       console.error(error);
     }
@@ -92,10 +109,7 @@ const signInWithGitHub = async () => {
   try {
     const { error } = await client.auth.signInWithOAuth({
       provider: "github",
-      options: {
-        redirectTo: "http://localhost:3000/protected/dashboard",
-      }
-    })
+    });
     if (error) {
       console.error(error);
     }
@@ -104,6 +118,11 @@ const signInWithGitHub = async () => {
   }
 };
 
+const onCloseHandler = {
+  close: (value: boolean) => {
+    isOpenRef.value = value;
+  },
+};
 </script>
 <template>
   <PageWrapper class="flex-1 flex">
@@ -114,9 +133,9 @@ const signInWithGitHub = async () => {
         >
           <a
             href="/"
-            class="flex items-center mb-6 text-4xl font-extrabold text-gray-900 dark:text-white uppercase"
+            class="flex items-center mb-6 text-4xl font-extrabold text-gray-900 dark:text-white uppercase title-text"
           >
-            Catatropic project
+            Catoptric project
           </a>
           <div
             class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700"
@@ -129,17 +148,19 @@ const signInWithGitHub = async () => {
               </h1>
               <div class="flex justify-between items-center mb-6">
                 <button
-                  class="hover:bg-gray-600 text-white font-bold p-2 rounded border w-40 text-sm"
+                  class="hover:bg-rose-600 text-white font-bold p-2 rounded w-38 text-sm border flex items-center"
                   @click.prevent="signInWithGoogle()"
                 >
-                  Sign in with Google
+                  <IconCarbon:logo-google class="w-5 h-5 flex-shrink-0" />
+                  <span class="flex-1">Sign in with Google</span>
                 </button>
                 <div class="flex-1"></div>
                 <button
-                  class="hover:bg-gray-600 text-white font-bold p-2 rounded w-40 text-sm border"
+                  class="hover:bg-dark-900 text-white font-bold p-2 rounded w-38 text-sm border flex items-center"
                   @click.prevent="signInWithGitHub()"
                 >
-                  Sign in with GitHub
+                  <IconCarbon:logo-github class="w-5 h-5 flex-shrink-0" />
+                  <span class="flex-1">Sign in with GitHub</span>
                 </button>
               </div>
               <div class="flex flex-row justify-center mb-6 items-center">
@@ -149,10 +170,22 @@ const signInWithGitHub = async () => {
               </div>
               <form class="space-y-4 md:space-y-6" @submit="onSubmit">
                 <InputTextWithValidation
+                  label="First name"
+                  name="firstName"
+                  :validation="firstNameSchema"
+                  initialValue="Quan"
+                />
+                <InputTextWithValidation
+                  label="Last name"
+                  name="lastName"
+                  :validation="lastNameSchema"
+                  initialValue="Khuc"
+                />
+                <InputTextWithValidation
                   label="Email address"
                   name="email"
                   :validation="emailSchema"
-                  initialValue="quankhuc99@gmail.com"
+                  initialValue="quankhuc11@gmail.com"
                 />
                 <InputTextWithValidation
                   label="Password"
@@ -176,36 +209,66 @@ const signInWithGitHub = async () => {
                       type="checkbox"
                       class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
                       required
-                      checked
                     />
                   </div>
                   <div class="ml-3 text-sm">
                     <label
                       for="terms"
                       class="font-light text-gray-500 dark:text-gray-300"
-                      >I accept the
+                    >
+                      I accept the
                       <a
                         class="font-medium text-primary-600 hover:underline dark:text-primary-500"
                         href="#"
-                        >Terms and Conditions</a
-                      ></label
-                    >
+                      >
+                        Terms and Conditions
+                      </a>
+                    </label>
                   </div>
                 </div>
                 <Button
                   label="Create an account"
                   type="submit"
-                  class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 !border-none"
+                  class="w-full !text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 !border-none"
                 />
                 <p class="text-sm font-light text-gray-500 dark:text-gray-400">
                   Already have an account?
                   <a
                     href="/auth/login"
                     class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-                    >Login here</a
                   >
+                    Login here
+                  </a>
                 </p>
               </form>
+            </div>
+          </div>
+        </div>
+        <AuthModal
+          :isOpen="isOpenRef"
+          :errorMessage="errorMessage"
+          v-on="onCloseHandler"
+        />
+        <div class="relative z-10">
+          <div
+            class="fixed inset-0 bg-black bg-opacity-60"
+            v-if="isSubmitting"
+          ></div>
+          <div class="fixed inset-0 overflow-y-auto" v-if="isSubmitting">
+            <div
+              class="flex min-h-full items-center justify-center p-4 text-center"
+            >
+              <div
+                class="w-full max-w-md transform overflow-hidden rounded-2xl bg:white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <div class="flex justify-center">
+                  <div
+                    class="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-indigo-500 to-pink-500 animate-spin"
+                  >
+                    <div class="h-9 w-9 rounded-full bg-gray-200"></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -213,3 +276,21 @@ const signInWithGitHub = async () => {
     </PageBody>
   </PageWrapper>
 </template>
+<style lang="scss" scoped>
+.title-text {
+  background-image: linear-gradient(
+    to right,
+    #4f46e5,
+    #00dbde,
+    #fc00ff,
+    #00dbde,
+    #4f46e5
+  );
+  background-size: 200% 1px;
+  background-position: 0 0;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 7s linear infinite;
+  background-clip: text;
+}
+</style>

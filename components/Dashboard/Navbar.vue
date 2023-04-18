@@ -5,9 +5,11 @@
         <div class="flex items-center">
           <img
             class="w-6 h-6 rounded-full mr-2"
-            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80"
-            alt="Avatar of Jonathan Reinink"
+            :src="userImage"
+            alt="Avatar"
+            v-if="userImage"
           />
+          <span v-else class="font-medium text-gray-600 dark:text-white rounded-md p-0.5" :class="randomBackgroundColor()">{{ firstLastInitial() }}</span>
           <div class="text-right">
             <Menu as="div" class="relative contents text-left">
               <div>
@@ -94,6 +96,27 @@
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 
 const client = useSupabaseAuthClient();
+const user = useSupabaseUser();
+const userImage = user.value?.user_metadata?.avatar_url || "";
+
+const firstLastInitial = () => {
+  const first = user.value?.user_metadata?.firstName || "";
+  const last = user.value?.user_metadata?.lastName || "";
+  return `${first[0]}${last[0]}`;
+};
+
+const randomBackgroundColor = () => {
+  const colors = [
+    "bg-violet-500",
+    "bg-rose-500",
+    "bg-blue-500",
+    "bg-green-500",
+    "bg-yellow-500",
+    "bg-indigo-500",
+    "bg-pink-500",
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+};
 
 const logOut = async () => {
   const { error } = await client.auth.signOut();

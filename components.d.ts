@@ -7,7 +7,10 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    'IconCarbon:logoGithub': typeof import('~icons/carbon/logo-github')['default']
+    'IconCarbon:logoGoogle': typeof import('~icons/carbon/logo-google')['default']
     'IconFaSolid:ellipsisV': typeof import('~icons/fa-solid/ellipsis-v')['default']
+    'IconIconParkSolid:experiment': typeof import('~icons/icon-park-solid/experiment')['default']
     'IconUil:angleDown': typeof import('~icons/uil/angle-down')['default']
     'IconUil:apps': typeof import('~icons/uil/apps')['default']
     'IconUil:bars': typeof import('~icons/uil/bars')['default']

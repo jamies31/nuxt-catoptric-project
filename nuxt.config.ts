@@ -16,7 +16,7 @@ export default defineNuxtConfig({
   css: [
     "~/assets/sass/vendor.scss",
     "~/assets/sass/app.scss",
-    "primevue/resources/themes/lara-light-blue/theme.css",
+    "primevue/resources/themes/lara-dark-teal/theme.css",
     "primevue/resources/primevue.css",
     "primeicons/primeicons.css",
   ],
@@ -70,6 +70,16 @@ export default defineNuxtConfig({
     // global transition
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "layout", mode: "out-in" },
+    baseURL: process.env.BASE_URL,
+    head: {
+      link: [
+        {
+          id: 'theme-link',
+          rel: 'stylesheet',
+          href: process.env.BASE_URL + 'themes/lara-light-blue/theme.css',
+        },
+      ],
+    }
   },
 
   // localization - i18n config
@@ -108,13 +118,11 @@ export default defineNuxtConfig({
     },
   },
 
-  runtimeConfig: {
-    FIREBASE_API_KEY: process.env.NUXT_PUBLIC_API_KEY,
-    FIREBASE_AUTH_DOMAIN: process.env.NUXT_PUBLIC_AUTH_DOMAIN,
-    FIREBASE_PROJECT_ID: process.env.NUXT_PUBLIC_PROJECT_ID,
-    FIREBASE_STORAGE_BUCKET: process.env.NUXT_PUBLIC_STORAGE_BUCKET,
-    FIREBASE_MESSAGING_SENDER_ID: process.env.NUXT_PUBLIC_MESSAGING_SENDER_ID,
-    FIREBASE_APP_ID: process.env.NUXT_PUBLIC_APP_ID,
-    FIREBASE_MEASUREMENT_ID: process.env.NUXT_PUBLIC_MEASUREMENT_ID,
+  // supabase
+  supabase: {
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_KEY,
+    serviceKey: process.env.SUPABASE_SERVICE_KEY,
+    redirect: true,
   },
 });

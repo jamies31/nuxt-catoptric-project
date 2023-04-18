@@ -12,12 +12,12 @@
       </slot>
       <div class="flex-1 w-full flex flex-col">
         <div
-          class="relative flex-1 flex flex-row mx-auto max-w-8xl w-full h-full"
+          class="relative flex-1 flex flex-row mx-auto max-w-8xl w-full h-full justify-center"
         >
           <div class="lg:pl-8 py-4">
             <DashboardSidebar />
           </div>
-          <div class="flex flex-col lg:ml-60 xl:ml-80 w-full h-full">
+          <div class="flex-col flex lg:ml-60 xl:ml-78 w-full h-full content">
             <slot />
           </div>
         </div>
@@ -27,3 +27,8 @@
     <div id="app-after"></div>
   </div>
 </template>
+<style lang="scss" scoped>
+.content{
+  max-width: stretch;
+}
+</style>
