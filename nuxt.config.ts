@@ -71,15 +71,6 @@ export default defineNuxtConfig({
     pageTransition: { name: "page", mode: "out-in" },
     layoutTransition: { name: "layout", mode: "out-in" },
     baseURL: process.env.BASE_URL,
-    head: {
-      link: [
-        {
-          id: 'theme-link',
-          rel: 'stylesheet',
-          href: process.env.BASE_URL + 'themes/lara-light-blue/theme.css',
-        },
-      ],
-    }
   },
 
   // localization - i18n config

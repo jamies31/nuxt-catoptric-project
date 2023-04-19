@@ -125,9 +125,9 @@ const onCloseHandler = {
 };
 </script>
 <template>
-  <PageWrapper class="flex-1 flex">
-    <PageBody class="flex-1 flex justify-center">
-      <PageSection class="bg-gray-50 dark:bg-gray-900">
+  <PageWrapper>
+    <PageBody>
+      <PageSection>
         <div
           class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
         >
@@ -173,33 +173,28 @@ const onCloseHandler = {
                   label="First name"
                   name="firstName"
                   :validation="firstNameSchema"
-                  initialValue="Quan"
                 />
                 <InputTextWithValidation
                   label="Last name"
                   name="lastName"
                   :validation="lastNameSchema"
-                  initialValue="Khuc"
                 />
                 <InputTextWithValidation
                   label="Email address"
                   name="email"
                   :validation="emailSchema"
-                  initialValue="quankhuc11@gmail.com"
                 />
                 <InputTextWithValidation
                   label="Password"
                   name="password"
                   :validation="passwordSchema"
                   type="password"
-                  initialValue="Khanhquan226!"
                 />
                 <InputTextWithValidation
                   label="Confirm password"
                   name="confirmPassword"
                   :validation="confirmPassword"
                   type="confirmPassword"
-                  initialValue="Khanhquan226!"
                 />
                 <div class="flex items-start">
                   <div class="flex items-center h-5">

@@ -7,6 +7,7 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import ColumnGroup from "primevue/columngroup";
 import Row from "primevue/row";
+import Dialog from "primevue/dialog";
 
 export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.use(PrimeVue, { ripple: true });
@@ -17,4 +18,5 @@ export default defineNuxtPlugin((nuxtApp) => {
     nuxtApp.vueApp.component("Column", Column);
     nuxtApp.vueApp.component("ColumnGroup", ColumnGroup);
     nuxtApp.vueApp.component("Row", Row);
+    nuxtApp.vueApp.component("Dialog", Dialog);
 });

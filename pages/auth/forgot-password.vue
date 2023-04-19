@@ -53,9 +53,9 @@ const onCloseHandler = {
 };
 </script>
 <template>
-  <PageWrapper class="flex-1 flex">
-    <PageBody class="flex-1 flex justify-center">
-      <PageSection class="bg-gray-50 dark:bg-gray-900">
+  <PageWrapper>
+    <PageBody>
+      <PageSection>
         <div class="max-w-4xl mx-auto mt-24">
           <div
             class="flex flex-col items-center justify-center p-4 space-y-4 antialiased text-gray-900 dark:text-white"

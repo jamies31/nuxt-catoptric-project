@@ -232,7 +232,14 @@ const tableValuesFormatted = computed(() => {
     },
   ];
 });
-
+const tempHtmlElement = computed(() => {
+  if (process.client) {
+    return document.getElementById("temp");
+  }
+});
+const onSelect = (event: any) => {
+  console.log(event);
+};
 </script>
 <template>
   <PageWrapper>
@@ -291,26 +298,17 @@ const tableValuesFormatted = computed(() => {
           </button>
         </div>
         <!-- Top Left Panel -->
-        <BuilderPanelmodal
+        <!-- <Teleport to="body"> -->
+          <DashboardPanelModal
           :enabled="topLeft.enabled"
-          name="Top Left"
+          id="topLeft"
           v-on="updateTopLeft"
           :selections="topLeft.selections"
-        >
-          <template #content>
-            <DragSelect v-model="topLeft.selections" id="topleft">
-              <DragSelectOption
-                v-for="item in topLeft.numMirrorsArray"
-                :key="item"
-                :value="item"
-              >
-                {{ item }}
-              </DragSelectOption>
-            </DragSelect>
-          </template>
-        </BuilderPanelmodal>
+          :cubes="topLeft.numMirrorsArray"
+        />
+        <!-- </Teleport> -->
         <!-- Left Most Panel -->
-        <BuilderPanelmodal
+        <!-- <DashboardPanelModal
           :enabled="leftMost.enabled"
           name="Left Most"
           v-on="updateLeftMost"
@@ -327,9 +325,9 @@ const tableValuesFormatted = computed(() => {
               </DragSelectOption>
             </DragSelect>
           </template>
-        </BuilderPanelmodal>
+        </DashboardPanelModal> -->
         <!-- Right Most Panel -->
-        <BuilderPanelmodal
+        <!-- <DashboardPanelModal
           :enabled="rightMost.enabled"
           name="Right Most"
           v-on="updateRightMost"
@@ -346,9 +344,9 @@ const tableValuesFormatted = computed(() => {
               </DragSelectOption>
             </DragSelect>
           </template>
-        </BuilderPanelmodal>
-        <!-- Top Right Panel -->
-        <BuilderPanelmodal
+        </DashboardPanelModal>
+        Top Right Panel 
+        <DashboardPanelModal
           :enabled="topRight.enabled"
           name="Top Right"
           v-on="updateTopRight"
@@ -365,9 +363,8 @@ const tableValuesFormatted = computed(() => {
               </DragSelectOption>
             </DragSelect>
           </template>
-        </BuilderPanelmodal>
-        <!-- Bottom Left Panel -->
-        <BuilderPanelmodal
+        </DashboardPanelModal>
+        <DashboardPanelModal
           :enabled="bottomLeft.enabled"
           name="Bottom Left"
           v-on="updateBottomLeft"
@@ -384,9 +381,8 @@ const tableValuesFormatted = computed(() => {
               </DragSelectOption>
             </DragSelect>
           </template>
-        </BuilderPanelmodal>
-        <!-- Bottom Right Panel -->
-        <BuilderPanelmodal
+        </DashboardPanelModal>
+        <DashboardPanelModal
           :enabled="bottomRight.enabled"
           name="Bottom Right"
           v-on="updateBottomRight"
@@ -403,8 +399,10 @@ const tableValuesFormatted = computed(() => {
               </DragSelectOption>
             </DragSelect>
           </template>
-        </BuilderPanelmodal>
-        <div class="rounded-lg my-4">
+        </DashboardPanelModal> -->
+      </PageSection>
+      <PageSection>
+        <div class="rounded-lg">
           <DataTable
             showGridlines
             tableStyle="min-width: 50rem; background-color: #1a202c;"
@@ -417,7 +415,12 @@ const tableValuesFormatted = computed(() => {
                 <span class="text-xl text-900 dark:text-white font-bold">
                   Current Mirrors Selection
                 </span>
-                <Button icon="pi pi-refresh" rounded raised @click="clearAllSelections"/>
+                <Button
+                  icon="pi pi-refresh"
+                  rounded
+                  raised
+                  @click="clearAllSelections"
+                />
               </div>
             </template>
             <Column field="topLeft" header="Top Left"></Column>
@@ -433,6 +436,8 @@ const tableValuesFormatted = computed(() => {
             ></Column>
           </DataTable>
         </div>
+      </PageSection>
+      <PageSection>
         <div class="flex justify-end gap-4 mt-6">
           <button
             type="button"

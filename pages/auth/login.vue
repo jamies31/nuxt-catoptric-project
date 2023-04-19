@@ -102,9 +102,21 @@ const onCloseHandler = {
 
 </script>
 <template>
-  <PageWrapper class="flex-1 flex">
-    <PageBody class="flex-1 flex justify-center">
-      <PageSection class="bg-gray-50 dark:bg-gray-900">
+  <PageWrapper>
+    <div class="background-overlay">
+      <div
+        class="absolute top-0 left-0 transform translate-x-64 translate-y-4 h-14 w-14 rounded-full bg-gray-900 dark:bg-white hidden md:block"
+      ></div>
+      <div
+        class="absolute hidden md:block top-0 left-0 transform translate-x-18 translate-y-20 h-28 w-28 rounded-full bg-blue-600 linear-wipe"
+      ></div>
+      <div
+        class="absolute hidden md:block bottom-0 right-0 transform -translate-x-4 -translate-y-40 h-16 w-16 rounded bg-purple-600 linear-wipe z-10"
+      ></div>
+      <div class="absolute bottom-0 right-0 triangle-shape z-10"></div>
+    </div>
+    <PageBody>
+      <PageSection>
         <div
           class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
         >
@@ -150,14 +162,12 @@ const onCloseHandler = {
                   label="Email address"
                   name="email"
                   :validation="emailSchema"
-                  initialValue="quankhuc99@gmail.com"
                 />
                 <InputTextWithValidation
                   label="Password"
                   name="password"
                   :validation="passwordSchema"
                   type="password"
-                  initialValue="Khanhquan226@"
                 />
                 <div class="flex items-center justify-start">
                   <a
