@@ -58,49 +58,6 @@ const onSelect = (e: any) => {
 };
 </script>
 <template>
-  <!-- <Dialog v-model:visible="_enabled" modal header="Hello" class="modal">
-    <div class="temp">
-      <div class="container">
-        <vue-selecto
-          dragContainer=".elements"
-          v-bind:selectableTargets="['.selecto-area .cube']"
-          v-bind:hitRate="10"
-          v-bind:selectByClick="true"
-          v-bind:selectFromInside="true"
-          v-bind:ratio="0"
-          @select="onSelect"
-          v-bind:toggleContinueSelect="['shift']"
-          v-bind:toggleContinueSelectWithoutDeselect="['ctrl', 'command']"
-        />
-        <div class="elements selecto-area" id="select1">
-          <div class="cube" v-for="cube in cubes">
-            <span class="flex items-center text-gray-800">{{ cube }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p class="text-md leading-6 font-medium text-gray-900">
-      Current selections are {{ displaySelections }}
-    </p>
-    <template #footer>
-      <div class="flex flex-row mt-4">
-        <button
-          type="button"
-          class="inline-flex justify-center rounded-md border border-transparent bg-sky-500 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-          @click="confirmSelection"
-        >
-          Confirm
-        </button>
-        <button
-          type="button"
-          class="inline-flex ml-4 justify-center rounded-md border border-transparent bg-rose-500 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-red-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-          @click="cancelSelection"
-        >
-          Cancel
-        </button>
-      </div>
-    </template>
-  </Dialog> -->
   <TransitionRoot :show="_enabled" as="template">
     <Dialog as="div" @close="closeModal" class="relative z-10">
       <TransitionChild as="template" enter="transition ease-out duration-300" enter-from="opacity-0"
