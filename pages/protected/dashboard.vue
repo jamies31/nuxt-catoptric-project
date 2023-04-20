@@ -248,7 +248,7 @@ const onSelect = (e: any) => {
       <PageTitle
         text="Group Mirrors Selection"
         class="uppercase flex justify-center"
-      ></PageTitle>
+      />
     </PageHeader>
     <PageBody>
       <PageSection>

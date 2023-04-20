@@ -104,13 +104,19 @@ const createGridById = () => {
   }
 };
 
-const onScroll = (e) => {
-  scroller.scrollBy(e.direction[0] * 10, e.direction[1] * 10);
+const onScroll = ({direction, container }) => {
+  container.scrollBy(direction[0] * 10, direction[1] * 10);
 };
 
 const onScrollerScroll = () => {
   selecto.checkScroll();
 };
+
+const scrollOptions = {
+  container: () => document.documentElement,
+  throttleTime: 20,
+  checkScrollEvent: true,
+}
 </script>
 <template>
   <TransitionRoot :show="_enabled" as="template">
@@ -140,6 +146,7 @@ const onScrollerScroll = () => {
               @dragStart="onDragStart"
               @select="onSelect"
               @scroll="onScroll"
+              :scrollOptions="scrollOptions"
             />
             <TransitionChild
               as="template"
