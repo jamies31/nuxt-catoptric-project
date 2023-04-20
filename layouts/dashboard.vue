@@ -25,24 +25,6 @@
     </div>
     <slot name="app-after" />
     <div id="app-after"></div>
-
-    <slot name="top-left" />
-    <div id="top-left"></div>
-
-    <slot name="left-most" />
-    <div id="left-most"></div>
-
-    <slot name="right-most" />
-    <div id="right-most"></div>
-
-    <slot name="top-right" />
-    <div id="top-right"></div>
-
-    <slot name="bottom-left" />
-    <div id="bottom-left"></div>
-
-    <slot name="bottom-right" />
-    <div id="bottom-right"></div>
   </div>
 </template>
 <style lang="scss" scoped>

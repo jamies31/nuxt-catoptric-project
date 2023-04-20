@@ -232,13 +232,14 @@ const tableValuesFormatted = computed(() => {
     },
   ];
 });
-const tempHtmlElement = computed(() => {
-  if (process.client) {
-    return document.getElementById("temp");
-  }
-});
-const onSelect = (event: any) => {
-  console.log(event);
+const onSelect = (e: any) => {
+  e.added.forEach((el: HTMLElement) => {
+    console.log(el);
+    el.classList.add("selected");
+  });
+  e.removed.forEach((el: HTMLElement) => {
+    el.classList.remove("selected");
+  });
 };
 </script>
 <template>
@@ -297,109 +298,48 @@ const onSelect = (event: any) => {
             Bottom Right
           </button>
         </div>
-        <!-- Top Left Panel -->
-        <!-- <Teleport to="body"> -->
-          <DashboardPanelModal
+        <DashboardPanelModal
           :enabled="topLeft.enabled"
-          id="topLeft"
-          v-on="updateTopLeft"
           :selections="topLeft.selections"
+          id="topLeft"
           :cubes="topLeft.numMirrorsArray"
+          v-on="updateTopLeft"
         />
-        <!-- </Teleport> -->
-        <!-- Left Most Panel -->
-        <!-- <DashboardPanelModal
+        <DashboardPanelModal
           :enabled="leftMost.enabled"
-          name="Left Most"
-          v-on="updateLeftMost"
           :selections="leftMost.selections"
-        >
-          <template #content>
-            <DragSelect v-model="leftMost.selections" id="leftmost">
-              <DragSelectOption
-                v-for="item in leftMost.numMirrorsArray"
-                :key="item"
-                :value="item"
-              >
-                {{ item }}
-              </DragSelectOption>
-            </DragSelect>
-          </template>
-        </DashboardPanelModal> -->
-        <!-- Right Most Panel -->
-        <!-- <DashboardPanelModal
+          id="leftMost"
+          :cubes="leftMost.numMirrorsArray"
+          v-on="updateLeftMost"
+        />
+        <DashboardPanelModal
           :enabled="rightMost.enabled"
-          name="Right Most"
-          v-on="updateRightMost"
           :selections="rightMost.selections"
-        >
-          <template #content>
-            <DragSelect v-model="rightMost.selections" id="rightmost">
-              <DragSelectOption
-                v-for="item in rightMost.numMirrorsArray"
-                :key="item"
-                :value="item"
-              >
-                {{ item }}
-              </DragSelectOption>
-            </DragSelect>
-          </template>
-        </DashboardPanelModal>
-        Top Right Panel 
+          id="rightMost"
+          :cubes="rightMost.numMirrorsArray"
+          v-on="updateRightMost"
+        />
         <DashboardPanelModal
           :enabled="topRight.enabled"
-          name="Top Right"
-          v-on="updateTopRight"
           :selections="topRight.selections"
-        >
-          <template #content>
-            <DragSelect v-model="topRight.selections" id="topright">
-              <DragSelectOption
-                v-for="item in topRight.numMirrorsArray"
-                :key="item"
-                :value="item"
-              >
-                {{ item }}
-              </DragSelectOption>
-            </DragSelect>
-          </template>
-        </DashboardPanelModal>
+          id="topRight"
+          :cubes="topRight.numMirrorsArray"
+          v-on="updateTopRight"
+        />
         <DashboardPanelModal
           :enabled="bottomLeft.enabled"
-          name="Bottom Left"
-          v-on="updateBottomLeft"
           :selections="bottomLeft.selections"
-        >
-          <template #content>
-            <DragSelect v-model="bottomLeft.selections" id="bottomleft">
-              <DragSelectOption
-                v-for="item in bottomLeft.numMirrorsArray"
-                :key="item"
-                :value="item"
-              >
-                {{ item }}
-              </DragSelectOption>
-            </DragSelect>
-          </template>
-        </DashboardPanelModal>
+          id="bottomLeft"
+          :cubes="bottomLeft.numMirrorsArray"
+          v-on="updateBottomLeft"
+        />
         <DashboardPanelModal
           :enabled="bottomRight.enabled"
-          name="Bottom Right"
-          v-on="updateBottomRight"
           :selections="bottomRight.selections"
-        >
-          <template #content>
-            <DragSelect v-model="bottomRight.selections" id="bottomright">
-              <DragSelectOption
-                v-for="item in bottomRight.numMirrorsArray"
-                :key="item"
-                :value="item"
-              >
-                {{ item }}
-              </DragSelectOption>
-            </DragSelect>
-          </template>
-        </DashboardPanelModal> -->
+          id="bottomRight"
+          :cubes="bottomRight.numMirrorsArray"
+          v-on="updateBottomRight"
+        />
       </PageSection>
       <PageSection>
         <div class="rounded-lg">
@@ -466,89 +406,98 @@ const onSelect = (event: any) => {
   }
 }
 
-#topleft {
-  :deep(.drag-select) {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-  }
+.container {
+  max-width: 800px;
 }
 
-#leftmost {
-  :deep(.drag-select) {
-    display: grid;
-    grid-template-columns: repeat(16, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    width: 100%;
-  }
+.logos .selecto {
+  padding: 16px;
 }
 
-#rightmost {
-  :deep(.drag-select) {
-    display: grid;
-    grid-template-columns: repeat(17, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-  }
-}
-
-#topright {
-  :deep(.drag-select) {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-  }
-}
-
-#bottomleft {
-  :deep(.drag-select) {
-    display: grid;
-    grid-template-columns: repeat(16, 1fr);
-    grid-template-rows: repeat(10, 1fr);
-  }
-}
-
-#bottomright {
-  :deep(.drag-select) {
-    display: grid;
-    grid-template-columns: repeat(17, 1fr);
-    grid-template-rows: repeat(10, 1fr);
-  }
-}
-
-.drag-select__wrapper {
+.logo img {
   position: relative;
-  border: 1px solid #086f5a;
-  overflow-x: auto;
+  height: 100%;
+  box-sizing: border-box;
 }
 
-.drag-select__area {
-  background: rgba(66, 153, 225, 0.5);
-}
-
-.drag-select__area::after {
-  display: block;
-  position: absolute;
-  content: " ";
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  border: 1px solid rgb(66, 153, 225);
-}
-
-.drag-select-option {
-  height: 2.5rem;
-  margin: 0.5rem;
-  color: #ffffff;
-  background: #e37e26;
+.cube {
+  display: inline-block;
   border-radius: 5px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 40px;
+  height: 40px;
+  margin: 4px;
+  background: #eee;
+  --color: #4af;
 }
 
-.drag-select-option--selected {
-  color: #000000;
-  background: #10ccc3;
+h1,
+.description {
+  text-align: center;
+}
+
+.button {
+  border: 1px solid #333;
+  color: #333;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  width: 120px;
+  height: 42px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  transition: all ease 0.2s;
+  margin: 0px 5px;
+}
+
+.button:hover {
+  background: #333;
+  color: white;
+}
+
+.elements {
+  border: 2px solid #eee;
+}
+
+.selecto-area {
+  padding: 20px;
+}
+
+#selecto1 .cube {
+  transition: all ease 0.2s;
+}
+
+.moveable #selecto1 .cube {
+  transition: none;
+}
+
+.selecto-area .selected {
+  color: #fff;
+  background: var(--color);
+}
+
+.scroll {
+  overflow: auto;
+  padding-top: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.infinite-viewer,
+.scroll {
+  width: 100%;
+  height: 300px;
+  box-sizing: border-box;
+}
+
+.infinite-viewer .viewport {
+  padding-top: 10px;
+}
+
+.empty.elements {
+  border: none;
 }
 </style>
