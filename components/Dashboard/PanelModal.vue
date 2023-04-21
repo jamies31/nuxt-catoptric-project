@@ -32,7 +32,8 @@ const _id = toRef(props, "id");
 const _cubes = toRef(props, "cubes");
 const emit = defineEmits(["close", "confirm", "cancel"]);
 const scroller = ref(null);
-const selecto = ref(null);
+const selecto = ref<any>(null);
+const scrollOptions = ref<any>(undefined);
 
 const closeModal = () => {
   emit("close", false);
@@ -104,19 +105,33 @@ const createGridById = () => {
   }
 };
 
-const onScroll = ({direction, container }) => {
-  container.scrollBy(direction[0] * 10, direction[1] * 10);
+// @ts-expect-error
+const onScroll = ({ direction, container }) => {
+  container.scrollBy({
+    left: direction[0] * 10,
+    top: direction[1] * 10,
+  });
 };
 
 const onScrollerScroll = () => {
-  selecto.checkScroll();
+  if (!selecto.value) return;
+  selecto.value.checkScroll();
 };
 
-const scrollOptions = {
-  container: () => document.documentElement,
-  throttleTime: 20,
-  checkScrollEvent: true,
-}
+// const scrollOptions = {
+//   container: () => scroller.value,
+//   throttleTime: 20,
+//   checkScrollEvent: true,
+// };
+
+onMounted(() => {
+  const scrollOptions_ = {
+    container: () => scroller.value,
+    throttleTime: 20,
+    checkScrollEvent: true,
+  };
+  scrollOptions.value = scrollOptions_;
+});
 </script>
 <template>
   <TransitionRoot :show="_enabled" as="template">

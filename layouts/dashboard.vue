@@ -17,7 +17,7 @@
           <div class="lg:pl-8 py-4">
             <DashboardSidebar />
           </div>
-          <div class="flex-col flex lg:ml-60 xl:ml-78 w-full h-full content">
+          <div class="flex-col flex lg:ml-60 xl:ml-78 w-full h-auto content">
             <slot />
           </div>
         </div>
@@ -30,5 +30,6 @@
 <style lang="scss" scoped>
 .content{
   max-width: stretch;
+  max-height: stretch;
 }
 </style>

@@ -14,7 +14,7 @@
             <Menu as="div" class="relative contents text-left">
               <div>
                 <MenuButton
-                  class="inline-flex w-full justify-center rounded-md dark:bg-gray-900 bg-opacity-0 px-4 pt-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
+                  class="inline-flex w-full justify-center rounded-md bg-opacity-0 px-4 pt-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 bg-inherit"
                 >
                   <IconUil:angleDown
                     class="h-4 w-4 text-violet-200 hover:text-violet-100"

@@ -53,6 +53,21 @@ const MyTheme = {
       '800': '#BB0000',
       '900': '#830000',
     },
+    // add a shade of wood color
+    wood: {
+      DEFAULT: "#966F33",
+      '50': '#f4e8e1',
+      '100': '#e7cfc2',
+      '200': '#d1a584',
+      '300': '#b98246',
+      '400': '#9f6025',
+      '500': '#8a4b0e',
+      '600': '#733d09',
+      '700': '#5c3005',
+      '800': '#471f01',
+      '900': '#2d0e00',
+      'dark': '#5c3005',
+    },
   },
 }
 
@@ -84,6 +99,7 @@ export default defineConfig({
         blue: MyTheme.colors.blue,
         red: MyTheme.colors.red,
         slate: colors.slate,
+        wood: MyTheme.colors.wood,
       },
       fontFamily: {
         sans: ['Nunito', ...defaultTheme.fontFamily.sans],

@@ -1,19 +1,18 @@
 <script lang="ts" setup>
-
 // need to implement when button is clicled
 
 const onClickUp = () => {
-  console.log('up');
-}
+  console.log("up");
+};
 const onClickRight = () => {
-  console.log('right');
-}
+  console.log("right");
+};
 const onClickLeft = () => {
-  console.log('left');
-}
+  console.log("left");
+};
 const onClickDown = () => {
-  console.log('down');
-}
+  console.log("down");
+};
 </script>
 <template>
   <div class="set dark">
@@ -29,24 +28,26 @@ const onClickDown = () => {
 <style lang="scss" scoped>
 .set {
   overflow: hidden;
-  padding: 1.75rem;
   text-align: center;
- .o-pad {
+  .o-pad {
     display: inline-block;
-    // transform: scale(.7);
   }
 }
-.set.setbg { background: #222; }
-.set.setbg2 { background: #5f9837; }
+.set.setbg {
+  background: #222;
+}
+.set.setbg2 {
+  background: #5f9837;
+}
 .o-pad {
   position: relative;
   background: #ddd;
   width: 10rem;
   height: 10rem;
-  border-radius:50%;
-  overflow:hidden;
+  border-radius: 50%;
+  overflow: hidden;
   &:after {
-    content: '';
+    content: "";
     position: absolute;
     z-index: 2;
     width: 20%;
@@ -57,7 +58,7 @@ const onClickDown = () => {
     border-radius: 50%;
     transform: translate(-50%, -50%);
     display: none;
-    transition: all .25s;
+    transition: all 0.25s;
     cursor: pointer;
   }
   &:hover:after {
@@ -65,37 +66,37 @@ const onClickDown = () => {
     height: 30%;
   }
   a {
-    display:block;
+    display: block;
     position: absolute;
-    -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
     width: 50%;
     height: 50%;
     text-align: center;
     transform: rotate(45deg);
-    border: 1px solid rgba(0,0,0,.2);
+    border: 1px solid rgba(0, 0, 0, 0.2);
     &:before {
-      content: '';
+      content: "";
       position: absolute;
       width: 60%;
       height: 60%;
       top: 50%;
       left: 50%;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 50%;
       transform: translate(-50%, -50%);
-      transition: all .25s;
+      transition: all 0.25s;
       cursor: pointer;
       display: none;
     }
     &:after {
-      content: '';
+      content: "";
       position: absolute;
       width: 0;
       height: 0;
       border-radius: 5px;
       border-style: solid;
       transform: translate(-50%, -50%) rotate(-45deg);
-      transition: all .25s;
+      transition: all 0.25s;
     }
   }
   a.up {
@@ -103,9 +104,13 @@ const onClickDown = () => {
     left: 50%;
     transform: translate(-50%, -20%) rotate(45deg);
     border-top-left-radius: 50%;
-    z-index:1;
+    z-index: 1;
     &:hover {
-      background: linear-gradient(315deg, rgba(255,255,255,0) 15%, rgba(255,255,255,.4) 100%);
+      background: linear-gradient(
+        315deg,
+        rgba(255, 255, 255, 0) 15%,
+        rgba(255, 255, 255, 0.4) 100%
+      );
     }
     &:before {
       left: 57%;
@@ -126,9 +131,13 @@ const onClickDown = () => {
     left: 50%;
     transform: translate(-50%, 20%) rotate(45deg);
     border-bottom-right-radius: 50%;
-    z-index:1;
+    z-index: 1;
     &:hover {
-      background: linear-gradient(135deg, rgba(255,255,255,0) 15%, rgba(255,255,255,.4) 100%);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0) 15%,
+        rgba(255, 255, 255, 0.4) 100%
+      );
     }
     &:before {
       left: 43%;
@@ -151,7 +160,11 @@ const onClickDown = () => {
     border-bottom-left-radius: 50%;
     border: none;
     &:hover {
-      background: linear-gradient(225deg, rgba(255,255,255,0) 15%, rgba(255,255,255,.4) 100%);
+      background: linear-gradient(
+        225deg,
+        rgba(255, 255, 255, 0) 15%,
+        rgba(255, 255, 255, 0.4) 100%
+      );
     }
     &:before {
       left: 57%;
@@ -174,7 +187,11 @@ const onClickDown = () => {
     border-top-right-radius: 50%;
     border: none;
     &:hover {
-      background: linear-gradient(45deg, rgba(255,255,255,0) 15%, rgba(255,255,255,.4) 100%);
+      background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0) 15%,
+        rgba(255, 255, 255, 0.4) 100%
+      );
     }
     &:before {
       left: 43%;
@@ -190,27 +207,61 @@ const onClickDown = () => {
       border-left-color: #333;
     }
   }
-  a:hover:after { left: 50%; top: 50%; }
+  a:hover:after {
+    left: 50%;
+    top: 50%;
+  }
 }
 .dark {
   .o-pad {
     background: #111;
-    a { border-color: rgba(255,255,255,.4); }
-    a:before { display: block; }
-    &:before, a { background: #111; }
-    a.up:after { border-bottom-color: rgba(255,255,255,.9); }
-    a.right:after { border-left-color: rgba(255,255,255,.9); }
-    a.down:after { border-top-color: rgba(255,255,255,.9); }
-    a.left:after { border-right-color: rgba(255,255,255,.9); }
-    a.up:active:after { border-bottom-color: #61e22d; }
-    a.right:active:after { border-left-color: #61e22d; }
-    a.down:active:after { border-top-color: #61e22d; }
-    a.left:active:after { border-right-color: #61e22d; }
+    a {
+      border-color: rgba(255, 255, 255, 0.4);
+    }
+    a:before {
+      display: block;
+    }
+    &:before,
+    a {
+      background: #111;
+    }
+    a.up:after {
+      border-bottom-color: rgba(255, 255, 255, 0.9);
+    }
+    a.right:after {
+      border-left-color: rgba(255, 255, 255, 0.9);
+    }
+    a.down:after {
+      border-top-color: rgba(255, 255, 255, 0.9);
+    }
+    a.left:after {
+      border-right-color: rgba(255, 255, 255, 0.9);
+    }
+    a.up:active:after {
+      border-bottom-color: #61e22d;
+    }
+    a.right:active:after {
+      border-left-color: #61e22d;
+    }
+    a.down:active:after {
+      border-top-color: #61e22d;
+    }
+    a.left:active:after {
+      border-right-color: #61e22d;
+    }
   }
 }
 // set direction active state
-.o-pad.up a.up:after { border-bottom-color: #333; }
-.o-pad.down a.down:after { border-top-color: #333; }
-.o-pad.left a.left:after { border-right-color: #333; }
-.o-pad.right a.right:after { border-left-color: #333; }
+.o-pad.up a.up:after {
+  border-bottom-color: #333;
+}
+.o-pad.down a.down:after {
+  border-top-color: #333;
+}
+.o-pad.left a.left:after {
+  border-right-color: #333;
+}
+.o-pad.right a.right:after {
+  border-left-color: #333;
+}
 </style>
