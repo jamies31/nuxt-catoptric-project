@@ -265,14 +265,14 @@ const onSelect = (e: any) => {
             @click="openLeftMostModal"
             class="rounded-md dark:bg-cyan-500 bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
           >
-            Left Most
+            Left Center
           </button>
           <button
             type="button"
             @click="openRightMostModal"
             class="rounded-md dark:bg-cyan-500 bg-amber-500 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
           >
-            Right Most
+            Right Center
           </button>
           <button
             type="button"
@@ -364,8 +364,8 @@ const onSelect = (e: any) => {
               </div>
             </template>
             <Column field="topLeft" header="Top Left"></Column>
-            <Column field="leftMost" header="Left Most"></Column>
-            <Column field="rightMost" header="Right Most"></Column>
+            <Column field="leftMost" header="Left Center"></Column>
+            <Column field="rightMost" header="Right Center"></Column>
             <Column field="topRight" header="Top Right"></Column>
             <Column field="bottomLeft" header="Bottom Left"></Column>
             <Column field="bottomRight" header="Bottom Right"></Column>

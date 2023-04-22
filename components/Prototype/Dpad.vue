@@ -1,17 +1,19 @@
 <script lang="ts" setup>
-// need to implement when button is clicled
+import _ from "lodash";
+
+const emit = defineEmits(["up", "right", "left", "down"])
 
 const onClickUp = () => {
-  console.log("up");
+  emit("up", true);
 };
 const onClickRight = () => {
-  console.log("right");
+  emit("right", true);
 };
 const onClickLeft = () => {
-  console.log("left");
+  emit("left", true);
 };
 const onClickDown = () => {
-  console.log("down");
+  emit("down", true);
 };
 </script>
 <template>

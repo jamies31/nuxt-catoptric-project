@@ -105,7 +105,7 @@
         </div>
       </PageSection>
       <PageSection class="flex justify-center h-5/12">
-        <MirrorController
+        <PrototypeMirrorController
           :selectedMirrors="selectedMirrors"
           v-on="updateMirrorsState"
         />
@@ -172,13 +172,11 @@ const updateMirrorsState = {
         // @ts-expect-error
         bottomLeftData.pan = value.pan;
         // @ts-expect-error
-
         bottomLeftData.tilt = value.tilt;
       } else if (key === "top_right") {
         // @ts-expect-error
         topRightData.pan = value.pan;
         // @ts-expect-error
-
         topRightData.tilt = value.tilt;
       } else if (key === "bottom_right") {
         // @ts-expect-error
@@ -190,7 +188,6 @@ const updateMirrorsState = {
   },
 };
 
-// get the latest data in the prototype table by sorting the id column in descending order
 await useAsyncData(async () => {
   const { data, error } = await client
     .from("Prototype")
@@ -205,6 +202,7 @@ await useAsyncData(async () => {
   const _data: any = data[0];
   delete _data.id;
   delete _data.created_at;
+  delete _data.user_id;
   if (_data.top_left) {
     topLeftData.pan = _data.top_left.pan;
     topLeftData.tilt = _data.top_left.tilt;
@@ -237,7 +235,32 @@ watch(selectedMirrors, (newVal) => {
   const bottomLeftVal = bottomLeft.value;
   const topRightVal = topRight.value;
   const bottomRightVal = bottomRight.value;
-  if (themeSetting.value === "dark") {
+  if (themeSetting.value === "light") {
+    if (topLeftVal && topLeftVal.classList.contains("bg-teal-400")) {
+      topLeftVal.classList.remove("bg-teal-400");
+    }
+    if (bottomLeftVal && bottomLeftVal.classList.contains("bg-teal-400")) {
+      bottomLeftVal.classList.remove("bg-teal-400");
+    }
+    if (topRightVal && topRightVal.classList.contains("bg-teal-400")) {
+      topRightVal.classList.remove("bg-teal-400");
+    }
+    if (bottomRightVal && bottomRightVal.classList.contains("bg-teal-400")) {
+      bottomRightVal.classList.remove("bg-teal-400");
+    }
+    if (topLeftVal && newVal.includes("topLeft")) {
+      topLeftVal.classList.add("bg-teal-400");
+    }
+    if (bottomLeftVal && newVal.includes("bottomLeft")) {
+      bottomLeftVal.classList.add("bg-teal-400");
+    }
+    if (topRightVal && newVal.includes("topRight")) {
+      topRightVal.classList.add("bg-teal-400");
+    }
+    if (bottomRightVal && newVal.includes("bottomRight")) {
+      bottomRightVal.classList.add("bg-teal-400");
+    }
+  } else {
     if (topLeftVal && topLeftVal.classList.contains("dark:bg-teal-400")) {
       topLeftVal.classList.remove("dark:bg-teal-400");
     }
@@ -264,31 +287,6 @@ watch(selectedMirrors, (newVal) => {
     }
     if (bottomRightVal && newVal.includes("bottomRight")) {
       bottomRightVal.classList.add("dark:bg-teal-400");
-    }
-  } else {
-    if (topLeftVal && topLeftVal.classList.contains("bg-teal-400")) {
-      topLeftVal.classList.remove("bg-teal-400");
-    }
-    if (bottomLeftVal && bottomLeftVal.classList.contains("bg-teal-400")) {
-      bottomLeftVal.classList.remove("bg-teal-400");
-    }
-    if (topRightVal && topRightVal.classList.contains("bg-teal-400")) {
-      topRightVal.classList.remove("bg-teal-400");
-    }
-    if (bottomRightVal && bottomRightVal.classList.contains("bg-teal-400")) {
-      bottomRightVal.classList.remove("bg-teal-400");
-    }
-    if (topLeftVal && newVal.includes("topLeft")) {
-      topLeftVal.classList.add("bg-teal-400");
-    }
-    if (bottomLeftVal && newVal.includes("bottomLeft")) {
-      bottomLeftVal.classList.add("bg-teal-400");
-    }
-    if (topRightVal && newVal.includes("topRight")) {
-      topRightVal.classList.add("bg-teal-400");
-    }
-    if (bottomRightVal && newVal.includes("bottomRight")) {
-      bottomRightVal.classList.add("bg-teal-400");
     }
   }
 });

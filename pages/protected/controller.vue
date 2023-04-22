@@ -89,7 +89,7 @@ const bottomRightMirrors = computed(() => {
 						</div>
 					</div>
 				</div>
-				<MirrorController />
+				<ControllerMirrorController />
 			</PageSection>
 		</PageBody>
 	</PageWrapper>
