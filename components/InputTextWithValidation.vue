@@ -7,7 +7,7 @@
     </label>
     <InputText
       class="bg-gray-50 text-gray-900 sm:text-sm rounded-lg w-full dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white"
-      v-model="value as string | null"
+      v-model="value"
       :aria-describedby="`${name}-help`"
       :class="{ 'p-invalid': errorMessage }"
       :type="type"
@@ -16,7 +16,7 @@
     <Password
       toggleMask
       class="bg-gray-50 text-gray-900 sm:text-sm rounded-lg w-full dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white"
-      v-model="value as string | null"
+      v-model="value"
       :aria-describedby="`${name}-help`"
       :class="{ 'p-invalid': errorMessage }"
       :type="type"
@@ -62,7 +62,6 @@ const { errorMessage, value } = useField(() => props.name, props.validation, {
 });
 
 if (props.type === "password") {
-  // set the initial value to the value
   value.value = props.initialValue;
 }
 </script>

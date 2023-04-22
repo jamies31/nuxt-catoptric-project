@@ -1,9 +1,7 @@
 import { ThemeManager } from "./theme";
-import { LanguageManager } from "./lang";
 
 export function AppSetup() {
   const themeManager = ThemeManager();
-  const languageManager = LanguageManager();
 
   const messages = [
     `Uncaught NotFoundError: Failed to execute 'insertBefore' on 'Node': The node before which the new node is to be inserted is not a child of this node.`, // chromium based
@@ -20,6 +18,5 @@ export function AppSetup() {
   }
   return {
     themeManager,
-    languageManager,
   };
 }
