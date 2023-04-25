@@ -2,8 +2,8 @@
 import _ from "lodash";
 
 interface MirrorState {
-  pan: number;
-  tilt: number;
+  pan: string;
+  tilt: string;
 }
 
 const props = defineProps({
@@ -16,8 +16,8 @@ const props = defineProps({
 const _selectedMirrors = toRef(props, "selectedMirrors");
 const controllerValue = ref<MirrorState[]>([
   {
-    pan: 0,
-    tilt: 0,
+    pan: '0',
+    tilt: '0',
   },
 ]);
 const columns = ref([
@@ -125,7 +125,8 @@ const resetSelectedMirrors = async () => {
     const { data, error } = await client
       .from("Prototype")
       // @ts-expect-error
-      .insert(insertPayload);
+      .insert(insertPayload)
+      .select();
     if (error) {
       throw new Error(error.message);
     }
@@ -160,7 +161,6 @@ const saveChangesSelectedMirrors = async () => {
   }
   const selectedMirrors = _selectedMirrors.value as string[];
   const currentSystemData = controllerValue.value[0];
-  // @ts-expect-error
   if (currentSystemData.pan === "" || currentSystemData.tilt === "") {
     isError.value = true;
     visible.value = true;

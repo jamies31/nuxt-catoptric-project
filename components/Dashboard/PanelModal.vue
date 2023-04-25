@@ -118,12 +118,6 @@ const onScrollerScroll = () => {
   selecto.value.checkScroll();
 };
 
-// const scrollOptions = {
-//   container: () => scroller.value,
-//   throttleTime: 20,
-//   checkScrollEvent: true,
-// };
-
 onMounted(() => {
   const scrollOptions_ = {
     container: () => scroller.value,

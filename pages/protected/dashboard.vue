@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { useMirrorManager } from "~/stores/mirrorManager";
+import { useSupabaseClient, useSupabaseUser } from "#imports";
+import { User } from "@supabase/supabase-js";
 
 interface IMirror {
   number: string;
@@ -7,45 +8,68 @@ interface IMirror {
 }
 
 const router = useRouter();
+const user = useSupabaseUser();
+const client = useSupabaseClient();
 
 definePageMeta({
   layout: "dashboard",
   middleware: "auth",
 });
 
+const latestSelection = ref<number[]>([]);
+
+const createSelections = (start: number, end: number) => {
+  const _selections: number[] = [];
+  latestSelection.value.forEach((num) => {
+    if (num >= start && num < end) {
+      _selections.push(num);
+    }
+  });
+  return _selections;
+}
+
+watch(latestSelection, (newValue) => {
+  topLeft.selections = createSelections(1, 49);
+  leftMost.selections = createSelections(49, 193);
+  rightMost.selections = createSelections(193, 295);
+  topRight.selections = createSelections(295, 359);
+  bottomLeft.selections = createSelections(359, 519);
+  bottomRight.selections = createSelections(519, 689);
+});
+
 const topLeft = reactive({
   enabled: false,
-  selections: [] as number[],
+  selections: createSelections(1, 49),
   numMirrorsArray: [...Array(48).keys()].map((i) => i + 1),
 });
 
 const leftMost = reactive({
   enabled: false,
-  selections: [] as number[],
+  selections: createSelections(49, 193),
   numMirrorsArray: [...Array(144).keys()].map((i) => i + 49),
 });
 
 const rightMost = reactive({
   enabled: false,
-  selections: [] as number[],
+  selections: createSelections(193, 295),
   numMirrorsArray: [...Array(102).keys()].map((i) => i + 193),
 });
 
 const topRight = reactive({
   enabled: false,
-  selections: [] as number[],
+  selections: createSelections(295, 359),
   numMirrorsArray: [...Array(64).keys()].map((i) => i + 295),
 });
 
 const bottomLeft = reactive({
   enabled: false,
-  selections: [] as number[],
+  selections: createSelections(359, 519),
   numMirrorsArray: [...Array(160).keys()].map((i) => i + 359),
 });
 
 const bottomRight = reactive({
   enabled: false,
-  selections: [] as number[],
+  selections: createSelections(519, 689),
   numMirrorsArray: [...Array(170).keys()].map((i) => i + 519),
 });
 
@@ -202,9 +226,7 @@ const updateMirrors = (selectedMirrors: number[], mirrorArray: IMirror[]) => {
 
 const mirrors = initializeMirrors();
 
-const mirrorManager = useMirrorManager();
-
-const confirmSelections = () => {
+const confirmSelections = async () => {
   const totalSelected = [
     ...topLeft.selections,
     ...leftMost.selections,
@@ -213,8 +235,28 @@ const confirmSelections = () => {
     ...bottomLeft.selections,
     ...bottomRight.selections,
   ];
+  if (totalSelected.length === 0) {
+    // give a modal message to select at least one mirror
+    console.log("select at least one mirror");
+    return;
+  }
+  const userValue: User | null = user.value;
+  if (userValue === null) {
+    // give a modal message to login
+    console.log("login");
+    return;
+  }
   updateMirrors(totalSelected, mirrors);
-  mirrorManager.addMirrors(mirrors);
+  const { error } = await client.from('DashboardSelection').insert({
+    // @ts-expect-error
+    user_id: userValue.id,
+    mirror_selection: totalSelected,
+  })
+  if (error) {
+    console.error(error);
+    // will make a modal to trigger error message
+    return;
+  }
   router.replace("controller");
 };
 
@@ -232,15 +274,6 @@ const tableValuesFormatted = computed(() => {
     },
   ];
 });
-const onSelect = (e: any) => {
-  e.added.forEach((el: HTMLElement) => {
-    console.log(el);
-    el.classList.add("selected");
-  });
-  e.removed.forEach((el: HTMLElement) => {
-    el.classList.remove("selected");
-  });
-};
 </script>
 <template>
   <PageWrapper>
