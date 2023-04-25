@@ -39,7 +39,7 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "@vueuse/nuxt",
     "nuxt-windicss",
-    '@nuxtjs/supabase',
+    "@nuxtjs/supabase",
   ],
 
   // experimental features
@@ -105,4 +105,6 @@ export default defineNuxtConfig({
     serviceKey: process.env.SUPABASE_SERVICE_KEY,
     redirect: true,
   },
+
+  plugins: [{ src: "~/plugins/vercel.ts", mode: "client" }],
 });
