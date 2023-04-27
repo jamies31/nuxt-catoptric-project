@@ -133,7 +133,7 @@ const isError = ref(false);
 const errorMessage = ref("");
 const isSuccess = ref(false);
 
-const emit = defineEmits(["reset-mirror-state"]);
+const emit = defineEmits(["update-mirror-state"]);
 
 const client = useSupabaseClient();
 const auth = useSupabaseUser();
@@ -196,7 +196,7 @@ const resetSelectedMirrors = async () => {
     return;
   }
   latestState.value = resetMirrors;
-  emit("reset-mirror-state");
+  emit("update-mirror-state", latestState.value);
 };
 
 const updateMirrorPanels = () => {
@@ -286,6 +286,7 @@ const saveChangesSelectedMirrors = async () => {
   resetModalState();
   isSuccess.value = true;
   visible.value = true;
+  emit("update-mirror-state", latestState.value);
 };
 
 const updateMirrorPanelsFromDpad = (direction: string) => {
@@ -342,6 +343,7 @@ const dpadUpdate = {
     resetModalState();
     isSuccess.value = true;
     visible.value = true;
+    emit("update-mirror-state", latestState.value);
   },
   down: async () => {
     if (_selectedMirrors.value.length === 0) {
@@ -363,6 +365,7 @@ const dpadUpdate = {
     resetModalState();
     isSuccess.value = true;
     visible.value = true;
+    emit("update-mirror-state", latestState.value);
   },
   left: async () => {
     if (_selectedMirrors.value.length === 0) {
@@ -384,6 +387,7 @@ const dpadUpdate = {
     resetModalState();
     isSuccess.value = true;
     visible.value = true;
+    emit("update-mirror-state", latestState.value);
   },
   right: async () => {
     if (_selectedMirrors.value.length === 0) {
@@ -405,6 +409,7 @@ const dpadUpdate = {
     resetModalState();
     isSuccess.value = true;
     visible.value = true;
+    emit("update-mirror-state", latestState.value);
   },
 };
 </script>
