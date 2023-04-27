@@ -251,8 +251,16 @@ const updateMirrorPanels = () => {
   latestState.value = currentSystemData;
 };
 
+const resetModalState = () => {
+  visible.value = false;
+  isError.value = false;
+  isSuccess.value = false;
+  errorMessage.value = "";
+};
+
 const saveChangesSelectedMirrors = async () => {
   if (_selectedMirrors.value.length === 0) {
+    resetModalState();
     isError.value = true;
     visible.value = true;
     errorMessage.value = "Please select at least a mirror.";
@@ -260,6 +268,7 @@ const saveChangesSelectedMirrors = async () => {
   }
   const _controllerValue = controllerValue.value[0];
   if (_controllerValue.pan === "" || _controllerValue.tilt === "") {
+    resetModalState();
     isError.value = true;
     visible.value = true;
     errorMessage.value = "Please enter a value for both pan and tilt.";
@@ -274,6 +283,7 @@ const saveChangesSelectedMirrors = async () => {
     return;
   }
   await getData();
+  resetModalState();
   isSuccess.value = true;
   visible.value = true;
 };
@@ -314,6 +324,7 @@ const updateMirrorPanelsFromDpad = (direction: string) => {
 const dpadUpdate = {
   up: async () => {
     if (_selectedMirrors.value.length === 0) {
+      resetModalState();
       isError.value = true;
       visible.value = true;
       errorMessage.value = "Please select at least a mirror.";
@@ -328,11 +339,13 @@ const dpadUpdate = {
       return;
     }
     await getData();
+    resetModalState();
     isSuccess.value = true;
     visible.value = true;
   },
   down: async () => {
     if (_selectedMirrors.value.length === 0) {
+      resetModalState();
       isError.value = true;
       visible.value = true;
       errorMessage.value = "Please select at least a mirror.";
@@ -347,11 +360,13 @@ const dpadUpdate = {
       return;
     }
     await getData();
+    resetModalState();
     isSuccess.value = true;
     visible.value = true;
   },
   left: async () => {
     if (_selectedMirrors.value.length === 0) {
+      resetModalState();
       isError.value = true;
       visible.value = true;
       errorMessage.value = "Please select at least a mirror.";
@@ -366,11 +381,13 @@ const dpadUpdate = {
       return;
     }
     await getData();
+    resetModalState();
     isSuccess.value = true;
     visible.value = true;
   },
   right: async () => {
     if (_selectedMirrors.value.length === 0) {
+      resetModalState();
       isError.value = true;
       visible.value = true;
       errorMessage.value = "Please select at least a mirror.";
@@ -385,6 +402,7 @@ const dpadUpdate = {
       return;
     }
     await getData();
+    resetModalState();
     isSuccess.value = true;
     visible.value = true;
   },

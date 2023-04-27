@@ -10,9 +10,9 @@ const latestSelection = ref<number[]>([]);
 
 const initializeMirrors = async () => {
   const mirrors = [...Array(689).keys()].map((i) => ({
-      number: (i + 1).toString(),
-      isSelected: false,
-    }));
+    number: (i + 1).toString(),
+    isSelected: false,
+  }));
   const { data, error } = await client
     .from("DashboardSelection")
     .select("*")
@@ -32,7 +32,7 @@ const initializeMirrors = async () => {
   mirrorSelection.forEach((num: number) => {
     mirrors[num - 1].isSelected = true;
     latestSelection.value.push(num);
-  })
+  });
   return mirrors;
 };
 
@@ -83,37 +83,49 @@ const formatNumMirrorsArray = (numMirrorsArray: number[]) => {
 const topLeft = reactive({
   enabled: false,
   selections: createSelections(1, 49),
-  numMirrorsArray: formatNumMirrorsArray([...Array(48).keys()].map((i) => i + 1)),
+  numMirrorsArray: formatNumMirrorsArray(
+    [...Array(48).keys()].map((i) => i + 1)
+  ),
 });
 
 const leftMost = reactive({
   enabled: false,
   selections: createSelections(49, 193),
-  numMirrorsArray: formatNumMirrorsArray([...Array(144).keys()].map((i) => i + 49)),
+  numMirrorsArray: formatNumMirrorsArray(
+    [...Array(144).keys()].map((i) => i + 49)
+  ),
 });
 
 const rightMost = reactive({
   enabled: false,
   selections: createSelections(193, 295),
-  numMirrorsArray: formatNumMirrorsArray([...Array(102).keys()].map((i) => i + 193)),
+  numMirrorsArray: formatNumMirrorsArray(
+    [...Array(102).keys()].map((i) => i + 193)
+  ),
 });
 
 const topRight = reactive({
   enabled: false,
   selections: createSelections(295, 359),
-  numMirrorsArray: formatNumMirrorsArray([...Array(64).keys()].map((i) => i + 295)),
+  numMirrorsArray: formatNumMirrorsArray(
+    [...Array(64).keys()].map((i) => i + 295)
+  ),
 });
 
 const bottomLeft = reactive({
   enabled: false,
   selections: createSelections(359, 519),
-  numMirrorsArray: formatNumMirrorsArray([...Array(160).keys()].map((i) => i + 359)),
+  numMirrorsArray: formatNumMirrorsArray(
+    [...Array(160).keys()].map((i) => i + 359)
+  ),
 });
 
 const bottomRight = reactive({
   enabled: false,
   selections: createSelections(519, 689),
-  numMirrorsArray: formatNumMirrorsArray([...Array(170).keys()].map((i) => i + 519)),
+  numMirrorsArray: formatNumMirrorsArray(
+    [...Array(170).keys()].map((i) => i + 519)
+  ),
 });
 
 const openTopLeftModal = () => {
@@ -234,13 +246,38 @@ const totalMirrorsCount = computed(() => {
   return totalMirrors.value.split(" ").length;
 });
 
-const clearAllSelections = () => {
-  topLeft.selections = [];
-  leftMost.selections = [];
-  rightMost.selections = [];
-  topRight.selections = [];
-  bottomLeft.selections = [];
-  bottomRight.selections = [];
+const clearAllSelections = async () => {
+  const { error } = await client.from("DashboardSelection").insert({
+    // @ts-expect-error
+    user_id: user.value.id,
+    mirror_selection: [],
+  });
+  if (error) {
+    console.error(error);
+    return;
+  }
+  mirrors.value.forEach((mirror) => {
+    mirror.isSelected = false;
+  });
+  latestSelection.value = [];
+  topLeft.numMirrorsArray = formatNumMirrorsArray(
+    [...Array(48).keys()].map((i) => i + 1)
+  );
+  leftMost.numMirrorsArray = formatNumMirrorsArray(
+    [...Array(144).keys()].map((i) => i + 49)
+  );
+  rightMost.numMirrorsArray = formatNumMirrorsArray(
+    [...Array(102).keys()].map((i) => i + 193)
+  );
+  topRight.numMirrorsArray = formatNumMirrorsArray(
+    [...Array(64).keys()].map((i) => i + 295)
+  );
+  bottomLeft.numMirrorsArray = formatNumMirrorsArray(
+    [...Array(160).keys()].map((i) => i + 359)
+  );
+  bottomRight.numMirrorsArray = formatNumMirrorsArray(
+    [...Array(170).keys()].map((i) => i + 519)
+  );
 };
 
 const updateMirrors = (selectedMirrors: number[], mirrorArray: IMirror[]) => {
