@@ -20,7 +20,6 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const user = useSupabaseUser();
 const client = useSupabaseClient();
 const mirrorLatestMovement = ref<MirrorMovement[] | null>(null);
 const themeSetting = useState<IThemeSettingOptions>("theme.setting");

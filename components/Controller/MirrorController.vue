@@ -196,6 +196,10 @@ const resetSelectedMirrors = async () => {
     return;
   }
   latestState.value = resetMirrors;
+  resetModalState();
+  visible.value = true;
+  isSuccess.value = true;
+  isError.value = false;
   emit("update-mirror-state", latestState.value);
 };
 
@@ -294,14 +298,12 @@ const updateMirrorPanelsFromDpad = (direction: string) => {
   if (direction === "up") {
     _selectedVal.forEach((val) => {
       if (val >= 1 && val < 49) {
-        latestState.value.top_left[val - 1].pan = 0;
         latestState.value.top_left[val - 1].tilt += 1;
       }
     });
   } else if (direction === "down") {
     _selectedVal.forEach((val) => {
       if (val >= 1 && val < 49) {
-        latestState.value.top_left[val - 1].pan = 0;
         latestState.value.top_left[val - 1].tilt -= 1;
       }
     });
@@ -309,14 +311,12 @@ const updateMirrorPanelsFromDpad = (direction: string) => {
     _selectedVal.forEach((val) => {
       if (val >= 1 && val < 49) {
         latestState.value.top_left[val - 1].pan -= 1;
-        latestState.value.top_left[val - 1].tilt = 0;
       }
     });
   } else if (direction === "right") {
     _selectedVal.forEach((val) => {
       if (val >= 1 && val < 49) {
         latestState.value.top_left[val - 1].pan += 1;
-        latestState.value.top_left[val - 1].tilt = 0;
       }
     });
   }
