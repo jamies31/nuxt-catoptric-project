@@ -148,15 +148,14 @@ const onCloseHandler = {
               </h1>
               <div class="flex justify-between items-center mb-6">
                 <button
-                  class="hover:bg-rose-600 text-white font-bold p-2 rounded w-38 text-sm border flex items-center"
+                  class="hover:bg-rose-600 text-white font-bold p-2 rounded w-38 text-sm border flex items-center ml-2"
                   @click.prevent="signInWithGoogle()"
                 >
                   <IconCarbon:logo-google class="w-5 h-5 flex-shrink-0" />
                   <span class="flex-1">Sign in with Google</span>
                 </button>
-                <div class="flex-1"></div>
                 <button
-                  class="hover:bg-dark-900 text-white font-bold p-2 rounded w-38 text-sm border flex items-center"
+                  class="hover:bg-dark-900 text-white font-bold p-2 rounded w-38 text-sm border flex items-center mr-2"
                   @click.prevent="signInWithGitHub()"
                 >
                   <IconCarbon:logo-github class="w-5 h-5 flex-shrink-0" />
