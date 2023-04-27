@@ -7,6 +7,12 @@ import {
   DialogTitle,
   TransitionChild,
 } from "@headlessui/vue";
+import { PropType } from "vue";
+
+interface IMirror {
+  number: string;
+  isSelected: boolean;
+}
 
 const props = defineProps({
   enabled: {
@@ -14,7 +20,7 @@ const props = defineProps({
     required: true,
   },
   selections: {
-    type: Array,
+    type: Array as PropType<number[]>,
     required: true,
   },
   id: {
@@ -22,7 +28,7 @@ const props = defineProps({
     required: true,
   },
   cubes: {
-    type: Array,
+    type: Array as PropType<IMirror[]>,
     required: true,
   },
 });
@@ -58,17 +64,20 @@ const _name = () => {
 
 const onSelect = (e: any) => {
   e.added.forEach((el: HTMLElement) => {
+    if (el.classList.contains("selected")) {
+      return;
+    }
     el.classList.add("selected");
     const value = el?.querySelector("span")?.textContent;
     if (value) {
-      props.selections.push(value);
+      props.selections.push(parseInt(value));
     }
   });
   e.removed.forEach((el: HTMLElement) => {
     el.classList.remove("selected");
     const value = el?.querySelector("span")?.textContent;
     if (value) {
-      const index = props.selections.indexOf(value);
+      const index = props.selections.indexOf(parseInt(value));
       if (index > -1) {
         props.selections.splice(index, 1);
       }
@@ -126,6 +135,7 @@ onMounted(() => {
   };
   scrollOptions.value = scrollOptions_;
 });
+
 </script>
 <template>
   <TransitionRoot :show="_enabled" as="template">
@@ -189,12 +199,23 @@ onMounted(() => {
                     ref="scroller"
                     @scroll="onScrollerScroll"
                   >
-                    <div class="cube" v-for="cube in _cubes">
-                      <span
-                        class="flex justify-center flex-1 text-gray-800 p-2"
-                        >{{ cube }}</span
+                    <template v-for="cube in _cubes">
+                      <div
+                        class="cube selected"
+                        v-if="cube.isSelected"
                       >
-                    </div>
+                        <span
+                          class="flex justify-center flex-1 text-gray-800 p-2"
+                          >{{ cube.number }}</span
+                        >
+                      </div>
+                      <div class="cube" v-else>
+                        <span
+                          class="flex justify-center flex-1 text-gray-800 p-2"
+                          >{{ cube.number }}</span
+                        >
+                      </div>
+                    </template>
                   </div>
                   <div class="empty elements"></div>
                 </div>

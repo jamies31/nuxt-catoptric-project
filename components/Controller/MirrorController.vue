@@ -42,7 +42,7 @@
     </DataTable>
     <div class="flex-1"></div>
     <div class="flex flex-row items-center justify-center">
-      <PrototypeDpad class="p-4" v-on="dpadUpdate" />
+      <Dpad class="p-4" v-on="dpadUpdate" />
     </div>
     <Dialog v-model:visible="visible" modal>
       <template #header>

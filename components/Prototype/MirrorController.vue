@@ -1,14 +1,20 @@
 <script lang="ts" setup>
 import _ from "lodash";
+import { PropType } from "vue";
 
 interface MirrorState {
   pan: string;
   tilt: string;
 }
 
+type PrototypeMirror = { [index: string]: {
+  pan: number;
+  tilt: number;
+} };
+
 const props = defineProps({
   selectedMirrors: {
-    type: Array,
+    type: Array as PropType<string[]>,
     required: true,
   },
 });
@@ -24,7 +30,7 @@ const columns = ref([
   { field: "pan", header: "Pan" },
   { field: "tilt", header: "Tilt" },
 ]);
-const latestState = ref({
+const latestState = ref<PrototypeMirror>({
   topLeft: {
     pan: 0,
     tilt: 0,
@@ -54,9 +60,7 @@ const auth = useSupabaseUser();
 const convertKeyToSnakeCase = () => {
   for (const key of Object.entries(latestState.value)) {
     const newKey = key[0].replace(/([A-Z])/g, "_$1").toLowerCase();
-    // @ts-expect-error
     latestState.value[newKey] = key[1];
-    // @ts-expect-error
     delete latestState.value[key[0]];
   }
 };
@@ -81,7 +85,6 @@ const getData = async () => {
   ]);
   for (const key of Object.entries(latestMirrorState)) {
     const newKey = key[0].replace(/([_][a-z])/g, (g) => g[1].toUpperCase());
-    // @ts-expect-error
     latestState.value[newKey] = key[1];
   }
 };
@@ -159,7 +162,7 @@ const saveChangesSelectedMirrors = async () => {
     errorMessage.value = "Please select at least a mirror.";
     return;
   }
-  const selectedMirrors = _selectedMirrors.value as string[];
+  const selectedMirrors = _selectedMirrors.value;
   const currentSystemData = controllerValue.value[0];
   if (currentSystemData.pan === "" || currentSystemData.tilt === "") {
     isError.value = true;
@@ -169,8 +172,11 @@ const saveChangesSelectedMirrors = async () => {
   }
   for (let i = 0; i < selectedMirrors.length; i++) {
     const mirror = selectedMirrors[i];
-    // @ts-expect-error
-    latestState.value[mirror] = currentSystemData;
+    const intSystemData = {
+      pan: parseInt(currentSystemData.pan),
+      tilt: parseInt(currentSystemData.tilt),
+    };
+    latestState.value[mirror] = intSystemData;
   }
   convertKeyToSnakeCase();
   const insertPayload = formatInsertPayload();
@@ -205,12 +211,10 @@ const dpadUpdate = {
         errorMessage.value = "Please select at least a mirror.";
         return;
       }
-      const selectedMirrors = _selectedMirrors.value as string[];
+      const selectedMirrors = _selectedMirrors.value;
       for (let i = 0; i < selectedMirrors.length; i++) {
         const mirror = selectedMirrors[i];
-        // @ts-expect-error
-        const intValue = parseInt(latestState.value[mirror].tilt);
-        // @ts-expect-error
+        const intValue = latestState.value[mirror].tilt;
         latestState.value[mirror].tilt = intValue + 1;
       }
       convertKeyToSnakeCase();
@@ -251,9 +255,7 @@ const dpadUpdate = {
       const selectedMirrors = _selectedMirrors.value as string[];
       for (let i = 0; i < selectedMirrors.length; i++) {
         const mirror = selectedMirrors[i];
-        // @ts-expect-error
-        const intValue = parseInt(latestState.value[mirror].tilt);
-        // @ts-expect-error
+        const intValue = latestState.value[mirror].tilt;
         latestState.value[mirror].tilt = intValue - 1;
       }
       convertKeyToSnakeCase();
@@ -294,9 +296,7 @@ const dpadUpdate = {
       const selectedMirrors = _selectedMirrors.value as string[];
       for (let i = 0; i < selectedMirrors.length; i++) {
         const mirror = selectedMirrors[i];
-        // @ts-expect-error
-        const intValue = parseInt(latestState.value[mirror].pan);
-        // @ts-expect-error
+        const intValue = latestState.value[mirror].pan;
         latestState.value[mirror].pan = intValue - 1;
       }
       convertKeyToSnakeCase();
@@ -337,9 +337,7 @@ const dpadUpdate = {
       const selectedMirrors = _selectedMirrors.value as string[];
       for (let i = 0; i < selectedMirrors.length; i++) {
         const mirror = selectedMirrors[i];
-        // @ts-expect-error
-        const intValue = parseInt(latestState.value[mirror].pan);
-        // @ts-expect-error
+        const intValue = latestState.value[mirror].pan;
         latestState.value[mirror].pan = intValue + 1;
       }
       convertKeyToSnakeCase();
@@ -415,7 +413,7 @@ const dpadUpdate = {
     </DataTable>
     <div class="flex-1"></div>
     <div class="flex flex-row items-center justify-center">
-      <PrototypeDpad class="p-4" v-on="dpadUpdate" />
+      <Dpad class="p-4" v-on="dpadUpdate" />
     </div>
     <Dialog v-model:visible="visible" modal>
       <template #header>

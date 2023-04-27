@@ -36,7 +36,7 @@ const onSubmit = handleSubmit(async (values, action) => {
     action.resetForm();
     isSubmitting.value = false;
     if (error) {
-      console.log(error);
+      console.error(error);
     } else {
       errorMessage.value = "Check your email to reset your password";
       isOpenRef.value = true;

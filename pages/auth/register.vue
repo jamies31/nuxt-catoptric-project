@@ -86,7 +86,7 @@ const onSubmit = handleSubmit(async (values, action) => {
       }
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     action.resetForm();
     isSubmitting.value = false;
   }

@@ -1,22 +1,54 @@
 <script lang="ts" setup>
 import { useSupabaseClient, useSupabaseUser } from "#imports";
-import { User } from "@supabase/supabase-js";
 
 interface IMirror {
   number: string;
   isSelected: boolean;
 }
 
+const latestSelection = ref<number[]>([]);
+
+const initializeMirrors = async () => {
+  const mirrors = [...Array(689).keys()].map((i) => ({
+      number: (i + 1).toString(),
+      isSelected: false,
+    }));
+  const { data, error } = await client
+    .from("DashboardSelection")
+    .select("*")
+    .limit(1)
+    .order("created_at", { ascending: false });
+  if (error) {
+    visible.value = true;
+    isError.value = true;
+    errorMessage.value = error.message;
+    return mirrors;
+  }
+  if (data.length === 0) {
+    return mirrors;
+  }
+  // @ts-expect-error
+  const mirrorSelection = data[0].mirror_selection;
+  mirrorSelection.forEach((num: number) => {
+    mirrors[num - 1].isSelected = true;
+    latestSelection.value.push(num);
+  })
+  return mirrors;
+};
+
 const router = useRouter();
 const user = useSupabaseUser();
 const client = useSupabaseClient();
+const visible = ref(false);
+const isError = ref(false);
+const errorMessage = ref("");
+const isSuccess = ref(false);
+const mirrors = ref(await initializeMirrors());
 
 definePageMeta({
   layout: "dashboard",
   middleware: "auth",
 });
-
-const latestSelection = ref<number[]>([]);
 
 const createSelections = (start: number, end: number) => {
   const _selections: number[] = [];
@@ -26,7 +58,7 @@ const createSelections = (start: number, end: number) => {
     }
   });
   return _selections;
-}
+};
 
 watch(latestSelection, (newValue) => {
   topLeft.selections = createSelections(1, 49);
@@ -37,40 +69,51 @@ watch(latestSelection, (newValue) => {
   bottomRight.selections = createSelections(519, 689);
 });
 
+const formatNumMirrorsArray = (numMirrorsArray: number[]) => {
+  const _numMirrorsArray: IMirror[] = [];
+  numMirrorsArray.forEach((num) => {
+    _numMirrorsArray.push({
+      number: num.toString(),
+      isSelected: mirrors.value[num - 1].isSelected,
+    });
+  });
+  return _numMirrorsArray;
+};
+
 const topLeft = reactive({
   enabled: false,
   selections: createSelections(1, 49),
-  numMirrorsArray: [...Array(48).keys()].map((i) => i + 1),
+  numMirrorsArray: formatNumMirrorsArray([...Array(48).keys()].map((i) => i + 1)),
 });
 
 const leftMost = reactive({
   enabled: false,
   selections: createSelections(49, 193),
-  numMirrorsArray: [...Array(144).keys()].map((i) => i + 49),
+  numMirrorsArray: formatNumMirrorsArray([...Array(144).keys()].map((i) => i + 49)),
 });
 
 const rightMost = reactive({
   enabled: false,
   selections: createSelections(193, 295),
-  numMirrorsArray: [...Array(102).keys()].map((i) => i + 193),
+  numMirrorsArray: formatNumMirrorsArray([...Array(102).keys()].map((i) => i + 193)),
 });
 
 const topRight = reactive({
   enabled: false,
   selections: createSelections(295, 359),
-  numMirrorsArray: [...Array(64).keys()].map((i) => i + 295),
+  numMirrorsArray: formatNumMirrorsArray([...Array(64).keys()].map((i) => i + 295)),
 });
 
 const bottomLeft = reactive({
   enabled: false,
   selections: createSelections(359, 519),
-  numMirrorsArray: [...Array(160).keys()].map((i) => i + 359),
+  numMirrorsArray: formatNumMirrorsArray([...Array(160).keys()].map((i) => i + 359)),
 });
 
 const bottomRight = reactive({
   enabled: false,
   selections: createSelections(519, 689),
-  numMirrorsArray: [...Array(170).keys()].map((i) => i + 519),
+  numMirrorsArray: formatNumMirrorsArray([...Array(170).keys()].map((i) => i + 519)),
 });
 
 const openTopLeftModal = () => {
@@ -106,7 +149,6 @@ const updateTopLeft = {
   },
   cancel: (value: boolean) => {
     topLeft.enabled = value;
-    topLeft.selections = [];
   },
 };
 
@@ -119,7 +161,6 @@ const updateLeftMost = {
   },
   cancel: (value: boolean) => {
     leftMost.enabled = value;
-    leftMost.selections = [];
   },
 };
 
@@ -132,7 +173,6 @@ const updateRightMost = {
   },
   cancel: (value: boolean) => {
     rightMost.enabled = value;
-    rightMost.selections = [];
   },
 };
 
@@ -145,7 +185,6 @@ const updateTopRight = {
   },
   cancel: (value: boolean) => {
     topRight.enabled = value;
-    topRight.selections = [];
   },
 };
 
@@ -158,7 +197,6 @@ const updateBottomLeft = {
   },
   cancel: (value: boolean) => {
     bottomLeft.enabled = value;
-    bottomLeft.selections = [];
   },
 };
 
@@ -171,7 +209,6 @@ const updateBottomRight = {
   },
   cancel: (value: boolean) => {
     bottomRight.enabled = value;
-    bottomRight.selections = [];
   },
 };
 
@@ -206,25 +243,11 @@ const clearAllSelections = () => {
   bottomRight.selections = [];
 };
 
-const initializeMirrors = () => {
-  const mirrorsArray: IMirror[] = [];
-  for (let i = 1; i <= 689; i++) {
-    const mirror: IMirror = {
-      number: i.toString(),
-      isSelected: false,
-    };
-    mirrorsArray.push(mirror);
-  }
-  return mirrorsArray;
-};
-
 const updateMirrors = (selectedMirrors: number[], mirrorArray: IMirror[]) => {
   selectedMirrors.forEach((mirror) => {
     mirrorArray[mirror - 1].isSelected = true;
   });
 };
-
-const mirrors = initializeMirrors();
 
 const confirmSelections = async () => {
   const totalSelected = [
@@ -236,22 +259,18 @@ const confirmSelections = async () => {
     ...bottomRight.selections,
   ];
   if (totalSelected.length === 0) {
-    // give a modal message to select at least one mirror
-    console.log("select at least one mirror");
+    visible.value = true;
+    isError.value = true;
+    errorMessage.value = "Please select at least one mirror";
+    console.error("select at least one mirror");
     return;
   }
-  const userValue: User | null = user.value;
-  if (userValue === null) {
-    // give a modal message to login
-    console.log("login");
-    return;
-  }
-  updateMirrors(totalSelected, mirrors);
-  const { error } = await client.from('DashboardSelection').insert({
+  updateMirrors(totalSelected, mirrors.value);
+  const { error } = await client.from("DashboardSelection").insert({
     // @ts-expect-error
-    user_id: userValue.id,
+    user_id: user.value?.id,
     mirror_selection: totalSelected,
-  })
+  });
   if (error) {
     console.error(error);
     // will make a modal to trigger error message
@@ -421,6 +440,20 @@ const tableValuesFormatted = computed(() => {
           </button>
         </div>
       </PageSection>
+      <Dialog v-model:visible="visible" modal>
+        <template #header>
+          <div v-if="isError" class="text-red-500 uppercase">Error</div>
+          <div v-if="isSuccess" class="text-green-500 uppercase">Success</div>
+        </template>
+        <template #default>
+          <div v-if="isError" class="text-red-500">
+            {{ errorMessage }}
+          </div>
+          <div v-if="isSuccess" class="text-green-500">
+            Selections were saved successfully!
+          </div>
+        </template>
+      </Dialog>
     </PageBody>
   </PageWrapper>
 </template>

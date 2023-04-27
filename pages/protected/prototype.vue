@@ -7,7 +7,10 @@
       />
     </PageHeader>
     <PageBody class="h-10/12 transition duration-500 ease-in-out">
-      <PageSection class="flex flex-col h-5/12" style="min-height: 10rem">
+      <PageSection
+        class="flex flex-col h-5/12 mx-auto max-w-md"
+        style="min-height: 10rem"
+      >
         <div
           class="w-full bg-wood border border-wood-dark shadow-md p-2 flex-1"
           style="max-height: 1rem"

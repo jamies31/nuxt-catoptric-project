@@ -121,7 +121,7 @@ const randomBackgroundColor = () => {
 const logOut = async () => {
   const { error } = await client.auth.signOut();
   if (error) {
-    console.log(error);
+    console.error(error);
   }
   else {
     navigateTo("/")

@@ -27,7 +27,7 @@ const getDashboardLastestSelection = async () => {
     .order("created_at", { ascending: false })
     .limit(1);
   if (error) {
-    console.log(error);
+    console.error(error);
     return;
   }
   // @ts-expect-error
@@ -77,7 +77,7 @@ const resetMirrorState = {
       // @ts-expect-error
       .insert(formatInsertPayload());
     if (error) {  
-      console.log(error);
+      console.error(error);
       return;
     }
     const _topLeftMirrors = createPanelWithMirrorSelection(1, 49);
