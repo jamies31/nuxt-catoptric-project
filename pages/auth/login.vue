@@ -99,7 +99,6 @@ const onCloseHandler = {
     isOpenRef.value = value;
   },
 };
-
 </script>
 <template>
   <PageWrapper>

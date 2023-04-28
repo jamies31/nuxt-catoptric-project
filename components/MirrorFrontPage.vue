@@ -25,7 +25,7 @@ export default {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true })
     renderer.setSize(width, height)
-    renderer.setClearColor(0x111827, 1)
+    renderer.setClearColor(0x111827, 0)
 
     this.$refs.container.appendChild(renderer.domElement)
 
