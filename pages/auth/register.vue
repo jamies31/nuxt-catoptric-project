@@ -133,7 +133,7 @@ const onCloseHandler = {
         >
           <a
             href="/"
-            class="flex items-center mb-6 text-4xl font-extrabold text-gray-900 dark:text-white uppercase title-text"
+            class="flex items-center mb-6 sm:m-6 text-4xl font-extrabold text-gray-900 dark:text-white uppercase title-text"
           >
             Catoptric project
           </a>
@@ -148,14 +148,14 @@ const onCloseHandler = {
               </h1>
               <div class="flex justify-between items-center mb-6">
                 <button
-                  class="hover:bg-rose-600 text-white font-bold p-2 rounded w-38 text-sm border flex items-center ml-2"
+                  class="hover:bg-rose-600 text-white font-bold p-2 rounded w-5/12 text-sm border flex items-center ml-1"
                   @click.prevent="signInWithGoogle()"
                 >
                   <IconCarbon:logo-google class="w-5 h-5 flex-shrink-0" />
                   <span class="flex-1">Sign in with Google</span>
                 </button>
                 <button
-                  class="hover:bg-dark-900 text-white font-bold p-2 rounded w-38 text-sm border flex items-center mr-2"
+                  class="hover:bg-dark-900 text-white font-bold p-2 rounded w-5/12 text-sm border flex items-center mr-1"
                   @click.prevent="signInWithGitHub()"
                 >
                   <IconCarbon:logo-github class="w-5 h-5 flex-shrink-0" />
