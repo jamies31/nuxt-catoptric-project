@@ -2,7 +2,7 @@
 	<div>
 		<slot name="app-before" />
 		<div id="app-before"></div>
-		<div class="flex flex-col min-h-screen bg-gradient-to-l from-blue-600/10 bg-gradient-to-r from-green-600/10">
+		<div class="flex flex-col min-h-screen">
 			<slot name="header">
 				<PageNavbar />
 			</slot>
