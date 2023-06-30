@@ -13,30 +13,31 @@ onMounted(() => {
   if (!navbar.value) return;
 
   // scroll event
-  const { onScroll } = useSticky(navbar.value);
-  setTimeout(() => onScroll(), 50);
+  const { onScroll } = useSticky(navbar.value)
+  setTimeout(() => onScroll(), 50)
 
   setInterval(() => {
     const minW = 1024;
     if (window.innerWidth < minW) {
       updateDrawerOptions();
     }
-  }, 100);
-});
+  }, 100)
+})
 
 onBeforeUnmount(() => {
   if (timer) {
     clearTimeout(timer);
   }
-});
+})
 
 const updateDrawerOptions = () => {
   if (showDrawer.value || showOptions.value) {
     document.body.classList.add("overflow-hidden");
-  } else {
+  }
+  else {
     document.body.classList.remove("overflow-hidden");
   }
-};
+}
 
 // methods
 const toggleDrawer = () => {
@@ -50,12 +51,11 @@ const toggleOptions = (show?: boolean) => {
     showOptions.value = !showOptions.value;
   }
 };
+
 </script>
 <template>
-  <div
-    ref="navbar"
-    class="backdrop-filter backdrop-blur-md top-0 z-40 w-full flex-none transition-colors duration-300 lg:z-50 border-b border-gray-900/10 dark:border-gray-50/[0.2] bg-white/[0.5] dark:bg-slate-900/[0.5] sticky bg-gradient-to-r from-blue-600/10 bg-gradient-to-l from-green-600/10"
-  >
+  <div ref="navbar"
+    class="backdrop-filter backdrop-blur-md top-0 z-40 w-full flex-none transition-colors duration-300 lg:z-50 border-b border-gray-900/10 dark:border-gray-50/[0.2] bg-white/[0.5] dark:bg-slate-900/[0.5] sticky bg-gradient-to-l from-blue-600/10 bg-gradient-to-r from-green-600/10">
     <div id="navbar-banner" class="banner">
       <slot name="banner" />
     </div>
@@ -63,19 +63,10 @@ const toggleOptions = (show?: boolean) => {
       <div class="py-3 lg:px-8 mx-4 lg:mx-0">
         <div class="relative flex items-center">
           <!-- drawer: toggle -->
-          <div
-            v-if="$slots['drawer']"
-            class="lg:hidden flex items-center self-center justify-center mr-2"
-          >
-            <button
-              class="flex items-center focus:outline-none"
-              aria-label="Toggle Drawer Menu"
-              @click="($event) => toggleDrawer()"
-            >
-              <span
-                class="flex items-center texdt-gray-600 dark:text-gray-300 text-lg"
-                aria-hidden="true"
-              >
+          <div v-if="$slots['drawer']" class="lg:hidden flex items-center self-center justify-center mr-2">
+            <button class="flex items-center focus:outline-none" aria-label="Toggle Drawer Menu"
+              @click="($event) => toggleDrawer()">
+              <span class="flex items-center texdt-gray-600 dark:text-gray-300 text-lg" aria-hidden="true">
                 <IconUil:bars v-if="!showDrawer" />
                 <IconUil:times v-else />
               </span>
@@ -83,11 +74,9 @@ const toggleOptions = (show?: boolean) => {
           </div>
           <!-- title -->
           <slot name="title">
-            <NuxtLink
-              tag="a"
+            <NuxtLink tag="a"
               class="mr-3 flex-none overflow-hidden md:w-auto text-md font-bold text-gray-900 dark:text-gray-200"
-              :to="{ name: 'index' }"
-            >
+              :to="{ name: 'index' }">
               <span class="flex items-center">
                 {{ app.name }}
               </span>
@@ -96,19 +85,10 @@ const toggleOptions = (show?: boolean) => {
           <!-- menu -->
           <slot name="menu" />
           <!-- options: toggle -->
-          <div
-            v-if="$slots['options']"
-            class="flex-1 flex justify-end lg:hidden"
-          >
-            <button
-              class="flex items-center focus:outline-none"
-              aria-label="Toggle Options Menu"
-              @click="($event) => toggleOptions()"
-            >
-              <span
-                class="flex items-center text-gray-600 dark:text-gray-300 text-sm"
-                aria-hidden="true"
-              >
+          <div v-if="$slots['options']" class="flex-1 flex justify-end lg:hidden">
+            <button class="flex items-center focus:outline-none" aria-label="Toggle Options Menu"
+              @click="$event => toggleOptions()">
+              <span class="flex items-center text-gray-600 dark:text-gray-300 text-sm" aria-hidden="true">
                 <icon-fa-solid:ellipsis-v />
               </span>
             </button>
@@ -119,10 +99,8 @@ const toggleOptions = (show?: boolean) => {
     <ClientOnly>
       <Teleport to="#app-after">
         <Transition name="slide-fade-from-up" mode="out-in">
-          <div
-            v-if="showDrawer && $slots['drawer']"
-            class="fixed lg:hidden bg-gray-100 dark:bg-slate-800 pt-12 top-0 left-0 w-screen h-screen z-30 flex flex-col"
-          >
+          <div v-if="showDrawer && $slots['drawer']"
+            class="fixed lg:hidden bg-gray-100 dark:bg-slate-800 pt-12 top-0 left-0 w-screen h-screen z-30 flex flex-col">
             <div class="flex-1 flex flex-col relative overflow-y-auto">
               <slot name="drawer" :toggle-drawer="toggleDrawer" />
             </div>
@@ -130,11 +108,7 @@ const toggleOptions = (show?: boolean) => {
         </Transition>
         <!-- options -->
         <div v-if="showOptions && $slots['options']">
-          <slot
-            name="options"
-            :toggle-options="toggleOptions"
-            :show-options="showOptions"
-          />
+          <slot name="options" :toggle-options="toggleOptions" :show-options="showOptions" />
         </div>
       </Teleport>
     </ClientOnly>
